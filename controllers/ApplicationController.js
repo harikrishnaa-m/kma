@@ -22,14 +22,14 @@ applicationCtrl.CreateNGO = async (req, res) => {
         paymentDetails
     } = req.body;
 
-    if(!organization) return res.status(400).json({msg:"Bad Request"})
+    if (!organization) return res.status(400).json({ msg: "Bad Request" })
 
-    let createObj = {...req.body}
+    let createObj = { ...req.body }
 
     let attached = [];
-    
-    if(req.files.length > 0){
-        req.files.map((file)=>(
+
+    if (req.files.length > 0) {
+        req.files.map((file) => (
             attached.push({ key: file.key, location: file.location })
         ))
 
@@ -61,28 +61,33 @@ applicationCtrl.CreateCSR = async (req, res) => {
         orgCategory,
         awardCategory,
         paymentDetails,
-      
+
     } = req.body;
 
-    if(!organization) return res.status(400).json({msg:"Bad Request"})
+    console.log(req.body)
+    console.log(req.files)
 
-    let createObj = {...req.body}
 
-    let attached = [];
-    
-    if(req.files.length > 0){
-        req.files.map((file)=>(
-            attached.push({ key: file.key, location: file.location })
-        ))
-
-        createObj.attachments = attached;
-    }
 
     try {
+        if (!organization) return res.status(400).json({ msg: "Bad Request" })
+
+        let createObj = { ...req.body }
+
+        let attached = [];
+
+        if (req.files.length > 0) {
+            req.files.map((file) => (
+                attached.push({ key: file.key, location: file.location })
+            ))
+
+            createObj.attachments = attached;
+        }
         const newCSRAppln = await CSR.create(createObj);
 
         res.status(200).json(newCSRAppln);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ msg: "Something went wrong" });
 
     }
@@ -104,14 +109,15 @@ applicationCtrl.CreateESG = async (req, res) => {
         paymentDetails,
     } = req.body;
 
-    if(!organization) return res.status(400).json({msg:"Bad Request"})
 
-    let createObj = {...req.body}
+    if (!organization) return res.status(400).json({ msg: "Bad Request" })
+
+    let createObj = { ...req.body }
 
     let attached = [];
-    
-    if(req.files.length > 0){
-        req.files.map((file)=>(
+
+    if (req.files.length > 0) {
+        req.files.map((file) => (
             attached.push({ key: file.key, location: file.location })
         ))
 
@@ -128,7 +134,7 @@ applicationCtrl.CreateESG = async (req, res) => {
     }
 }
 
-applicationCtrl.GetAllApplications = async(req,res)=>{
+applicationCtrl.GetAllApplications = async (req, res) => {
 
     try {
         const allNGOs = await NGO.find();
@@ -138,80 +144,80 @@ applicationCtrl.GetAllApplications = async(req,res)=>{
         const result = [...allNGOs, ...allCSRs, ...allESGs]
 
         res.status(200).json(result)
-        
+
     } catch (error) {
-        res.status(500).json({msg:"Something went wrong"})
-        
+        res.status(500).json({ msg: "Something went wrong" })
+
     }
 }
 
-applicationCtrl.GetAllNGOs = async(req,res)=>{
+applicationCtrl.GetAllNGOs = async (req, res) => {
 
     try {
         const allNGOs = await NGO.find();
 
         res.status(200).json(allNGOs)
-        
+
     } catch (error) {
-        res.status(500).json({msg:"Something went wrong"})
-        
+        res.status(500).json({ msg: "Something went wrong" })
+
     }
 }
 
-applicationCtrl.GetAllCSRs = async(req,res)=>{
+applicationCtrl.GetAllCSRs = async (req, res) => {
 
     try {
         const allCSRs = await CSR.find();
 
         res.status(200).json(allCSRs)
-        
+
     } catch (error) {
-        res.status(500).json({msg:"Something went wrong"})
-        
+        res.status(500).json({ msg: "Something went wrong" })
+
     }
 }
 
-applicationCtrl.GetAllESGs = async(req,res)=>{
+applicationCtrl.GetAllESGs = async (req, res) => {
 
     try {
-        
+
         const allESGs = await ESG.find();
 
         res.status(200).json(allESGs)
-        
+
     } catch (error) {
-        res.status(500).json({msg:"Something went wrong"})
-        
+        res.status(500).json({ msg: "Something went wrong" })
+
     }
 }
 
-applicationCtrl.GetSingle = async(req,res)=>{
+applicationCtrl.GetSingle = async (req, res) => {
     const applicationId = req.params.id;
     const type = req.query.type;
 
     const isValid = isValidObjectId(applicationId);
-    if(!isValid) return res.status(400).json({msg:"Bad Request"})
+    if (!isValid) return res.status(400).json({ msg: "Bad Request" })
 
     try {
         let result;
 
-        if(type === "ngo"){
+        if (type === "ngo") {
             result = await NGO.findById(applicationId)
 
-        }else if(type=== "csr"){
+        } else if (type === "csr") {
             result = await CSR.findById(applicationId)
-            
-        }else if(type=== "esg"){
+
+        } else if (type === "esg") {
             result = await ESG.findById(applicationId)
 
         }
 
-        if(!result) return res.status(404).json({msg:"Application not found"})
+        if (!result) return res.status(404).json({ msg: "Application not found" })
 
         res.status(200).json(result)
     } catch (error) {
-        res.status(500).json({msg:"Something went wrong"})
-        
+        res.status(500).json({ msg: "Something went wrong" })
+
     }
 }
 

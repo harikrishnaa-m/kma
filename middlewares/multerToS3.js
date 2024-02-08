@@ -18,6 +18,7 @@ const s3Client = new S3Client({
 // Upload files to AWS S3 Bucket;
 
 const upload = multer({
+    
     storage: multerS3({
         s3: s3Client,
         bucket:Bucket,
@@ -25,6 +26,7 @@ const upload = multer({
             const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1e9)
             cb(null, 'Documents/' + `${uniquePrefix}-${file.originalname}`);
         },
+        
     }),
     
 });

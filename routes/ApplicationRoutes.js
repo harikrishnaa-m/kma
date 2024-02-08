@@ -2,7 +2,7 @@ const router = require("express").Router();
 const applicationCtrl = require("../controllers/ApplicationController");
 const upload = require("../middlewares/multerToS3");
 
-router.post("/create-csr", upload.array('files'), applicationCtrl.CreateCSR);
+router.post("/create-csr",upload.array('files'), applicationCtrl.CreateCSR);
 router.post("/create-esg", upload.array('files'), applicationCtrl.CreateESG);
 router.post("/create-ngo", upload.array('files'), applicationCtrl.CreateNGO);
 
