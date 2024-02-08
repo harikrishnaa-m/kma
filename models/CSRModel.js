@@ -5,7 +5,7 @@ const CSRSchema = new mongoose.Schema({
     address: {type:String},
     contactPerson:{type:String},
     email: {type:String},
-    phone:{type:[]},
+    phone:{type:Number},
     website:{type:String},
     head:{type:String},
     orgType:{type:String},
