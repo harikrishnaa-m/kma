@@ -33,8 +33,8 @@ authCtrl.Login = async (req, res) => {
 
         const { password, ...userInfo } = user;
 
-        res.cookie('access_token', accessToken, { httpOnly: true, sameSite: "None", secure: true, maxAge: maxAgeAccessCookie });
-        res.cookie('refresh_token', refreshToken, { httpOnly: true, sameSite: "None", secure: true, maxAge: maxAgeRefreshCookie })
+        res.cookie('access_token', accessToken, { httpOnly: true, SameSite: "None", secure: true, maxAge: maxAgeAccessCookie });
+        res.cookie('refresh_token', refreshToken, { httpOnly: true, SameSite: "None", secure: true, maxAge: maxAgeRefreshCookie })
 
         res.status(200).json(userInfo)
 
