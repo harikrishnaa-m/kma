@@ -13,9 +13,6 @@ authCtrl.Login = async (req, res) => {
     const name = req.body.name;
     console.log("name", name)
 
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(email)) return res.status(400).json({ msg: "Invalid Email format" });
-
     try {
         // const emailCaseRegex = new RegExp(email, 'i')
 
