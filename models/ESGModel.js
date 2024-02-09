@@ -1,23 +1,29 @@
 const mongoose = require("mongoose");
 
 const ESGSchema = new mongoose.Schema({
-    organization: {type:String,required:true},
-    address: {type:String},
-    contactPerson:{type:String},
-    email: {type:String},
-    phone:{type:Number},
-    website:{type:String},
-    head:{type:String},
-    orgType:{type:String},
-    stockExchange:{type:String},
-    paymentDetails:{type:{
-        mode:{type:String},
-        ss:{type:String},
-        transactionId:{type:String},
-    }},
-    attachments:{type:[]}    
-    
-},{timestamps:true})
+    organization: { type: String, required: true },
+    address: { type: String },
+    contactPerson: { type: String },
+    email: { type: String, unique: true },
+    phone: { type: Number, unique: true },
+    website: { type: String },
+    head: { type: String },
+    orgType: { type: String },
+    stockExchange: { type: String },
+    kma_member: { type: Boolean, default: false },
+    paymentDetails: {
+        type: {
+            mode: { type: String },
+            amount: { type: String },
+            amountWithGst: { type: String },
+            ss: { type: String },
+            transactionId: { type: String },
+        },
+        default: {}
+    },
+    attachments: { type: [] }
+
+}, { timestamps: true })
 
 const ESG = mongoose.model("ESG", ESGSchema);
 

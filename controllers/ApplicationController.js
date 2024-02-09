@@ -6,7 +6,6 @@ const ESG = require("../models/ESGModel");
 const applicationCtrl = {};
 
 // Create NGO Application;
-
 applicationCtrl.CreateNGO = async (req, res) => {
 
     const {
@@ -19,24 +18,51 @@ applicationCtrl.CreateNGO = async (req, res) => {
         head,
         legalStatus,
         csrNumber,
-        paymentDetails
+        mode,
+        amount,
+        amountWithGst,
+        transactionId,
+        ss,
     } = req.body;
 
-    if (!organization) return res.status(400).json({ msg: "Bad Request" })
-
-    let createObj = { ...req.body }
-
-    let attached = [];
-
-    if (req.files.length > 0) {
-        req.files.map((file) => (
-            attached.push({ key: file.key, location: file.location })
-        ))
-
-        createObj.attachments = attached;
-    }
-
     try {
+        const exist = await NGO.find({ phone });
+        const emailExist = await NGO.find({ email });
+        console.log(exist, emailExist)
+        if (!organization) return res.status(400).json({ msg: "Bad Request" })
+        if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
+        if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
+
+        let createObj = {
+            organization,
+            address,
+            contactPerson,
+            email,
+            phone,
+            website,
+            head,
+            legalStatus,
+            csrNumber,
+            paymentDetails: {
+                type: {
+                    mode,
+                    amount,
+                    amountWithGst,
+                    ss,
+                    transactionId
+                },
+            }
+        }
+
+        let attached = [];
+
+        if (req.files.length > 0) {
+            req.files.map((file) => (
+                attached.push({ key: file.key, location: file.location })
+            ))
+
+            createObj.attachments = attached;
+        }
         const newNGOAppln = await NGO.create(createObj);
 
         res.status(200).json(newNGOAppln);
@@ -47,7 +73,6 @@ applicationCtrl.CreateNGO = async (req, res) => {
 }
 
 // Create CSR Application;
-
 applicationCtrl.CreateCSR = async (req, res) => {
     const {
         organization,
@@ -60,19 +85,44 @@ applicationCtrl.CreateCSR = async (req, res) => {
         orgType,
         orgCategory,
         awardCategory,
-        paymentDetails,
+        kma_member,
+        mode,
+        amount,
+        amountWithGst,
+        transactionId,
+        ss,
 
     } = req.body;
 
-    console.log(req.body)
-    console.log(req.files)
-
-
-
     try {
+        const exist = await CSR.find({ phone });
+        const emailExist = await CSR.find({ email });
         if (!organization) return res.status(400).json({ msg: "Bad Request" })
+        if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
+        if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
-        let createObj = { ...req.body }
+        let createObj = {
+            organization,
+            address,
+            contactPerson,
+            email,
+            phone,
+            website,
+            head,
+            orgType,
+            orgCategory,
+            awardCategory,
+            kma_member,
+            paymentDetails: {
+                type: {
+                    mode,
+                    amount,
+                    amountWithGst,
+                    ss,
+                    transactionId
+                },
+            }
+        }
 
         let attached = [];
 
@@ -89,12 +139,10 @@ applicationCtrl.CreateCSR = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({ msg: "Something went wrong" });
-
     }
 }
 
 // Create ESG Application;
-
 applicationCtrl.CreateESG = async (req, res) => {
     const {
         organization,
@@ -106,31 +154,58 @@ applicationCtrl.CreateESG = async (req, res) => {
         head,
         orgType,
         stockExchange,
-        paymentDetails,
+        kma_member,
+        mode,
+        amount,
+        amountWithGst,
+        transactionId,
+        ss,
     } = req.body;
 
-
-    if (!organization) return res.status(400).json({ msg: "Bad Request" })
-
-    let createObj = { ...req.body }
-
-    let attached = [];
-
-    if (req.files.length > 0) {
-        req.files.map((file) => (
-            attached.push({ key: file.key, location: file.location })
-        ))
-
-        createObj.attachments = attached;
-    }
-
     try {
+        const exist = await ESG.find({ phone });
+        const emailExist = await ESG.find({ email });
+        if (!organization) return res.status(400).json({ msg: "Bad Request" })
+        if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
+        if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
+
+        let createObj = {
+            organization,
+            address,
+            contactPerson,
+            email,
+            phone,
+            website,
+            head,
+            orgType,
+            stockExchange,
+            kma_member,
+            paymentDetails: {
+                type: {
+                    mode,
+                    amount,
+                    amountWithGst,
+                    ss,
+                    transactionId
+                },
+            }
+        }
+
+        let attached = [];
+
+        if (req.files.length > 0) {
+            req.files.map((file) => (
+                attached.push({ key: file.key, location: file.location })
+            ))
+
+            createObj.attachments = attached;
+        }
         const newESGAppln = await ESG.create(createObj);
 
         res.status(200).json(newESGAppln);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ msg: "Something went wrong" });
-
     }
 }
 

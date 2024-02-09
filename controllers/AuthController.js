@@ -10,24 +10,26 @@ const authCtrl = {};
 
 // Authentication method for Admin/Employee/Student;
 authCtrl.Login = async (req, res) => {
-    const email = req.body.email;
-    console.log("email", email)
+    const name = req.body.name;
+    console.log("name", name)
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return res.status(400).json({ msg: "Invalid Email format" });
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailRegex.test(email)) return res.status(400).json({ msg: "Invalid Email format" });
 
     try {
-        const emailCaseRegex = new RegExp(email, 'i')
+        // const emailCaseRegex = new RegExp(email, 'i')
 
-        const user = await User.findOne({ email: emailCaseRegex }).lean();
+        const user = await User.findOne({ name: name }).lean();
 
-        if (!user){
-            return res.status(401).json({ msg: "Invalid email or password" })
+        if (!user) {
+            return res.status(401).json({ msg: "Invalid name" })
         }
 
         const isValidPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!isValidPassword) return res.status(401).json({ msg: "Invalid email or password" });
+        if (!isValidPassword) return res.status(401).json({ msg: "Invalid  password" });
 
+
+        console.log(isValidPassword)
         const accessToken = generateAccessToken({ userId: user._id, role: user.role })
 
         const refreshToken = generateRefreshToken({ userId: user._id, role: user.role })

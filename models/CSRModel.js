@@ -4,8 +4,8 @@ const CSRSchema = new mongoose.Schema({
     organization: { type: String, required: true },
     address: { type: String },
     contactPerson: { type: String },
-    email: { type: String },
-    phone: { type: Number },
+    email: { type: String, unique: true },
+    phone: { type: Number, unique: true },
     website: { type: String },
     head: { type: String },
     orgType: { type: String },
@@ -19,7 +19,8 @@ const CSRSchema = new mongoose.Schema({
             amountWithGst: { type: String },
             ss: { type: String },
             transactionId: { type: String },
-        }
+        },
+        default: {}
     },
     attachments: { type: [] }
 
