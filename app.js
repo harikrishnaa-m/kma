@@ -15,10 +15,8 @@ app.use(cors({
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-
 app.use("/api/auth", authRouter);
 app.use("/api/application", applicationRouter)
-
 
 app.listen(9000, () => {
     console.log("Server running successfully")
