@@ -22,7 +22,8 @@ const CSRSchema = new mongoose.Schema({
         },
         default: {}
     },
-    attachments: { type: [] }
+    attachments: { type: [] },
+    formName:{type:String, default:"CSR"}
 
 }, { timestamps: true })
 

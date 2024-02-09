@@ -21,7 +21,8 @@ const ESGSchema = new mongoose.Schema({
         },
         default: {}
     },
-    attachments: { type: [] }
+    attachments: { type: [] },
+    formName:{type:String, default:"ESG"}
 
 }, { timestamps: true })
 

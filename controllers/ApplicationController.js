@@ -267,22 +267,24 @@ applicationCtrl.GetAllESGs = async (req, res) => {
 }
 
 applicationCtrl.GetSingle = async (req, res) => {
-    const applicationId = req.params.id;
+    let applicationId = req.params.id;
     const type = req.query.type;
 
+    applicationId = applicationId.trim();
+
     const isValid = isValidObjectId(applicationId);
-    if (!isValid) return res.status(400).json({ msg: "Bad Request" })
+    if (!isValid) return res.status(400).json({ msg: "Person UnAuthorized" })
 
     try {
         let result;
 
-        if (type === "ngo") {
+        if (type === "NGO") {
             result = await NGO.findById(applicationId)
 
-        } else if (type === "csr") {
+        } else if (type === "CSR") {
             result = await CSR.findById(applicationId)
 
-        } else if (type === "esg") {
+        } else if (type === "ESG") {
             result = await ESG.findById(applicationId)
 
         }
@@ -291,6 +293,7 @@ applicationCtrl.GetSingle = async (req, res) => {
 
         res.status(200).json(result)
     } catch (error) {
+        console.log(error)
         res.status(500).json({ msg: "Something went wrong" })
 
     }

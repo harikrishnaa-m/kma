@@ -20,7 +20,8 @@ const NGOSchema = new mongoose.Schema({
         },
         default: {}
     },
-    attachments: { type: [] }
+    attachments: { type: [] },
+    formName:{type:String, default:"NGO"}
 
 }, { timestamps: true })
 
