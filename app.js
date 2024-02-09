@@ -1,17 +1,21 @@
 const express = require("express");
 const ConnectDB = require("./db");
+const CookieParser = require("cookie-parser");
 require("dotenv").config()
 const app = express();
 const authRouter = require("./routes/AuthRoutes")
 const applicationRouter = require("./routes/ApplicationRoutes");
 const cors = require('cors');
 
+const ClientURL = process.env.ClientURL;
+
 ConnectDB()
 app.use(cors({
-    origin: process.env.ClientURL,
+    origin: ClientURL,
     credentials: true,
 }));
 
+app.use(CookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
