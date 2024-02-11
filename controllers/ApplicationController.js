@@ -6,6 +6,8 @@ const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const axios = require('axios');
 
+const generateMail = require('../utils/NodeMailer.js')
+
 const applicationCtrl = {};
 
 // ID Generate
@@ -345,7 +347,6 @@ const newPayment = async (req, res, obj) => {
         };
 
         axios.request(options).then(function (response) {
-            console.log(response.data)
             return res.redirect(response.data.data.instrumentResponse.redirectInfo.url);
         })
             .catch(function (error) {
@@ -363,7 +364,7 @@ const newPayment = async (req, res, obj) => {
 applicationCtrl.checkStatus = async (req, res) => {
 
     const merchantTransactionId = req.params.txnId
-    
+
     const keyIndex = 1;
     const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
     const sha256 = crypto.createHash('sha256').update(string).digest('hex');
@@ -384,17 +385,23 @@ applicationCtrl.checkStatus = async (req, res) => {
     axios.request(options).then(async (response) => {
         if (response.data.success === true) {
             if (finalObj?.formName === "NGO") {
-                const response = await NGO.create(finalObj);
+                await NGO.create(finalObj);
+                await generateMail(finalObj)
                 const url = `${process.env.ClientURL}/registration?status=success`
                 return res.status(201).redirect(url)
+
             } else if (finalObj?.formName === "ESG") {
                 await ESG.create(finalObj);
+                await generateMail(finalObj)
                 const url = `${process.env.ClientURL}/registration?status=success`
                 return res.status(201).redirect(url)
+
             } else if (finalObj?.formName === "CSR") {
                 await CSR.create(finalObj)
+                await generateMail(finalObj)
                 const url = `${process.env.ClientURL}/registration?status=success`
                 return res.status(201).redirect(url)
+                
             }
         } else {
             const url = `${process.env.ClientURL}/registration?status=cancel`
