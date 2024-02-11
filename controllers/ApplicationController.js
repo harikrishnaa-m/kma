@@ -243,7 +243,7 @@ applicationCtrl.CreateESG = async (req, res) => {
         console.log(createObj)
 
         // conditionally check this is a online or offline payment
-        if (req.body.mode == 'Online') {
+        if (mode == 'Online') {
             console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
@@ -394,34 +394,44 @@ applicationCtrl.checkStatus = async (req, res) => {
 
     // CHECK PAYMENT STATUS
     axios.request(options).then(async (response) => {
+        
         if (response.data.success === true) {
+             generateMail(finalObj)
             if (finalObj?.formName === "NGO") {
-                await NGO.create(finalObj);
-                await generateMail(finalObj)
-                const url = `${process.env.ClientURL}/registration?status=success`
+                const response = await NGO.create(finalObj);
+                console.log(response)
+                console.log(finalObj)
+                const url = `https://kma.qmarkdesk.com/registration?status=success`
+                // const url = `${process.env.ClientURL}/registration?status=success`
                 return res.status(201).redirect(url)
 
             } else if (finalObj?.formName === "ESG") {
-                await ESG.create(finalObj);
-                await generateMail(finalObj)
-                const url = `${process.env.ClientURL}/registration?status=success`
+                const response = await ESG.create(finalObj);
+                console.log(response)
+                console.log(finalObj)
+                const url = `https://kma.qmarkdesk.com/registration?status=success`
+                // const url = `${process.env.ClientURL}/registration?status=success`
                 return res.status(201).redirect(url)
-
+                
             } else if (finalObj?.formName === "CSR") {
-                await CSR.create(finalObj)
-                await generateMail(finalObj)
-                const url = `${process.env.ClientURL}/registration?status=success`
+               const response =  await CSR.create(finalObj);
+               console.log(response)
+               console.log(finalObj)
+                const url = `https://kma.qmarkdesk.com/registration?status=success`
+                // const url = `${process.env.ClientURL}/registration?status=success`
                 return res.status(201).redirect(url)
                 
             }
         } else {
-            const url = `${process.env.ClientURL}/registration?status=cancel`
+            const url = `https://kma.qmarkdesk.com//registration?status=cancel`
+            // const url = `${process.env.ClientURL}/registration?status=cancel`
             return res.redirect(url)
         }
     })
         .catch((error) => {
             console.log(error)
-            const url = `${process.env.ClientURL}/registration?status=fail`
+            const url = `https://kma.qmarkdesk.com//registration?status=fail`
+            // const url = `${process.env.ClientURL}/registration?status=fail`
             return res.redirect(url)
         });
 };
