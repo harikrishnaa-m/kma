@@ -40,6 +40,7 @@ applicationCtrl.CreateNGO = async (req, res) => {
         ss,
     } = req.body;
 
+    console.log(req.body)
     try {
         const exist = await NGO.find({ phone });
         const emailExist = await NGO.find({ email });
@@ -78,12 +79,14 @@ applicationCtrl.CreateNGO = async (req, res) => {
         }
 
         // conditionally check this is a online or offline payment
-        if (mode === 'Online') {
+        if (mode == 'Online') {
+            console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
         } else {
+            console.log("i am enter the else")
             const newNGOAppln = await NGO.create(createObj);
             res.status(200).json(newNGOAppln);
         }
@@ -114,7 +117,7 @@ applicationCtrl.CreateCSR = async (req, res) => {
         transactionId,
         ss,
     } = req.body;
-
+    console.log(req.body)
     try {
         const exist = await CSR.find({ phone });
         const emailExist = await CSR.find({ email });
@@ -157,12 +160,14 @@ applicationCtrl.CreateCSR = async (req, res) => {
         }
 
         // conditionally check this is a online or offline payment
-        if (mode === 'Online') {
+        if (mode == 'Online') {
+            console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
         } else {
+            console.log("i am enter Else")
             const newCSRAppln = await CSR.create(createObj);
             res.status(200).json(newCSRAppln);
         }
@@ -192,6 +197,8 @@ applicationCtrl.CreateESG = async (req, res) => {
         transactionId,
         ss,
     } = req.body;
+
+    console.log(req.body)
 
     try {
         const exist = await ESG.find({ phone });
@@ -233,13 +240,17 @@ applicationCtrl.CreateESG = async (req, res) => {
             createObj.attachments = attached;
         }
 
+        console.log(createObj)
+
         // conditionally check this is a online or offline payment
-        if (mode === 'Online') {
+        if (mode == 'Online') {
+            console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
         } else {
+            console.log("i am enter else")
             const newESGAppln = await ESG.create(createObj);
             res.status(200).json(newESGAppln);
         }
@@ -310,6 +321,9 @@ applicationCtrl.GetAllESGs = async (req, res) => {
 let finalObj;
 const newPayment = async (req, res, obj) => {
     finalObj = obj
+
+    console.log("hi iam hit here")
+    console.log(obj)
     try {
         const merchantTransactionId = obj.paymentDetails.transactionId;
         const data = {
@@ -347,17 +361,14 @@ const newPayment = async (req, res, obj) => {
         };
 
         axios.request(options).then(function (response) {
-            return res.redirect(response.data.data.instrumentResponse.redirectInfo.url);
+            return res.status(201).json(response.data.data.instrumentResponse);
         })
             .catch(function (error) {
                 console.error(error);
             });
 
     } catch (error) {
-        res.status(500).send({
-            message: error.message,
-            success: false
-        })
+        console.log(error)
     }
 }
 
