@@ -12,17 +12,15 @@ const ESGSchema = new mongoose.Schema({
     stockExchange: { type: String },
     kma_member: { type: Boolean, default: false },
     paymentDetails: {
-        type: {
-            mode: { type: String },
-            amount: { type: String },
-            amountWithGst: { type: String },
-            ss: { type: String },
-            transactionId: { type: String },
-        },
-        default: {}
+        mode: { type: String },
+        amount: { type: String },
+        amountWithGst: { type: String },
+        ss: { type: String },
+        transactionId: { type: String },
+        muid: { type: String },
     },
     attachments: { type: [] },
-    formName:{type:String, default:"ESG"}
+    formName: { type: String, default: "ESG" }
 
 }, { timestamps: true })
 

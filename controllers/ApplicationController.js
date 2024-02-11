@@ -2,8 +2,21 @@ const { isValidObjectId } = require("mongoose");
 const NGO = require("../models/NGOModel");
 const CSR = require("../models/CSRModel");
 const ESG = require("../models/ESGModel");
+const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
+const axios = require('axios');
 
 const applicationCtrl = {};
+
+// ID Generate
+function generateTransactionId() {
+    // Generate a random UUIz
+    const uuid = uuidv4();
+    const shortUuid = uuid.substring(0, 8);
+    const shortUuidUpperCase = shortUuid.toUpperCase();
+    const transactionId = `T-${shortUuidUpperCase}`;
+    return transactionId;
+}
 
 // Create NGO Application;
 applicationCtrl.CreateNGO = async (req, res) => {
@@ -28,11 +41,11 @@ applicationCtrl.CreateNGO = async (req, res) => {
     try {
         const exist = await NGO.find({ phone });
         const emailExist = await NGO.find({ email });
-        console.log(exist, emailExist)
         if (!organization) return res.status(400).json({ msg: "Bad Request" })
         if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
         if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
+        // create the obj for the payment 
         let createObj = {
             organization,
             address,
@@ -44,28 +57,35 @@ applicationCtrl.CreateNGO = async (req, res) => {
             legalStatus,
             csrNumber,
             paymentDetails: {
-                type: {
-                    mode,
-                    amount,
-                    amountWithGst,
-                    ss,
-                    transactionId
-                },
-            }
+                mode,
+                amount,
+                amountWithGst,
+                ss,
+                transactionId
+            },
+            formName: "NGO"
         }
 
+        // File data arranging
         let attached = [];
-
         if (req.files.length > 0) {
             req.files.map((file) => (
                 attached.push({ key: file.key, location: file.location })
             ))
-
             createObj.attachments = attached;
         }
-        const newNGOAppln = await NGO.create(createObj);
 
-        res.status(200).json(newNGOAppln);
+        // conditionally check this is a online or offline payment
+        if (mode === 'Online') {
+            const transactionID = generateTransactionId();
+            createObj.paymentDetails.muid = "MUID" + Date.now();
+            createObj.paymentDetails.transactionId = transactionID;
+            await newPayment(req, res, createObj)
+        } else {
+            const newNGOAppln = await NGO.create(createObj);
+            res.status(200).json(newNGOAppln);
+        }
+
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" });
 
@@ -91,7 +111,6 @@ applicationCtrl.CreateCSR = async (req, res) => {
         amountWithGst,
         transactionId,
         ss,
-
     } = req.body;
 
     try {
@@ -101,6 +120,7 @@ applicationCtrl.CreateCSR = async (req, res) => {
         if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
         if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
+        // create the obj for the payment 
         let createObj = {
             organization,
             address,
@@ -114,16 +134,16 @@ applicationCtrl.CreateCSR = async (req, res) => {
             awardCategory,
             kma_member,
             paymentDetails: {
-                type: {
-                    mode,
-                    amount,
-                    amountWithGst,
-                    ss,
-                    transactionId
-                },
-            }
+                mode,
+                amount,
+                amountWithGst,
+                ss,
+                transactionId,
+            },
+            formName: "CSR"
         }
 
+        // File data arranging
         let attached = [];
 
         if (req.files.length > 0) {
@@ -133,9 +153,18 @@ applicationCtrl.CreateCSR = async (req, res) => {
 
             createObj.attachments = attached;
         }
-        const newCSRAppln = await CSR.create(createObj);
 
-        res.status(200).json(newCSRAppln);
+        // conditionally check this is a online or offline payment
+        if (mode === 'Online') {
+            const transactionID = generateTransactionId();
+            createObj.paymentDetails.muid = "MUID" + Date.now();
+            createObj.paymentDetails.transactionId = transactionID;
+            await newPayment(req, res, createObj)
+        } else {
+            const newCSRAppln = await CSR.create(createObj);
+            res.status(200).json(newCSRAppln);
+        }
+
     } catch (error) {
         console.log(error)
         res.status(500).json({ msg: "Something went wrong" });
@@ -169,6 +198,7 @@ applicationCtrl.CreateESG = async (req, res) => {
         if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
         if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
+        // create the obj for the payment 
         let createObj = {
             organization,
             address,
@@ -181,16 +211,16 @@ applicationCtrl.CreateESG = async (req, res) => {
             stockExchange,
             kma_member,
             paymentDetails: {
-                type: {
-                    mode,
-                    amount,
-                    amountWithGst,
-                    ss,
-                    transactionId
-                },
-            }
+                mode,
+                amount,
+                amountWithGst,
+                ss,
+                transactionId
+            },
+            formName: "ESG"
         }
 
+        // File data arranging
         let attached = [];
 
         if (req.files.length > 0) {
@@ -200,9 +230,18 @@ applicationCtrl.CreateESG = async (req, res) => {
 
             createObj.attachments = attached;
         }
-        const newESGAppln = await ESG.create(createObj);
 
-        res.status(200).json(newESGAppln);
+        // conditionally check this is a online or offline payment
+        if (mode === 'Online') {
+            const transactionID = generateTransactionId();
+            createObj.paymentDetails.muid = "MUID" + Date.now();
+            createObj.paymentDetails.transactionId = transactionID;
+            await newPayment(req, res, createObj)
+        } else {
+            const newESGAppln = await ESG.create(createObj);
+            res.status(200).json(newESGAppln);
+        }
+
     } catch (error) {
         console.log(error)
         res.status(500).json({ msg: "Something went wrong" });
@@ -265,6 +304,110 @@ applicationCtrl.GetAllESGs = async (req, res) => {
 
     }
 }
+
+let finalObj;
+const newPayment = async (req, res, obj) => {
+    finalObj = obj
+    try {
+        const merchantTransactionId = obj.paymentDetails.transactionId;
+        const data = {
+            merchantId: process.env.MERCHANT_ID,
+            merchantTransactionId: merchantTransactionId,
+            merchantUserId: obj.paymentDetails.muid,
+            name: obj.head,
+            amount: 1 * 100,
+            redirectUrl: `http://localhost:9000/api/application/status/${merchantTransactionId}`,
+            redirectMode: 'GET',
+            mobileNumber: obj.phone,
+            paymentInstrument: {
+                type: 'PAY_PAGE'
+            }
+        };
+        const payload = JSON.stringify(data);
+        const payloadMain = Buffer.from(payload).toString('base64');
+        const keyIndex = 1;
+        const string = payloadMain + '/pg/v1/pay' + process.env.SALT_KEY;
+        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
+        const checksum = sha256 + '###' + keyIndex;
+
+        const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay"
+        const options = {
+            method: 'POST',
+            url: prod_URL,
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-VERIFY': checksum
+            },
+            data: {
+                request: payloadMain
+            }
+        };
+
+        axios.request(options).then(function (response) {
+            console.log(response.data)
+            return res.redirect(response.data.data.instrumentResponse.redirectInfo.url);
+        })
+            .catch(function (error) {
+                console.error(error);
+            });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+            success: false
+        })
+    }
+}
+
+applicationCtrl.checkStatus = async (req, res) => {
+
+    const merchantTransactionId = req.params.txnId
+    
+    const keyIndex = 1;
+    const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
+    const sha256 = crypto.createHash('sha256').update(string).digest('hex');
+    const checksum = sha256 + "###" + keyIndex;
+
+    const options = {
+        method: 'GET',
+        url: `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-VERIFY': checksum,
+            'X-MERCHANT-ID': `${process.env.MERCHANT_ID}`
+        }
+    };
+
+    // CHECK PAYMENT STATUS
+    axios.request(options).then(async (response) => {
+        if (response.data.success === true) {
+            if (finalObj?.formName === "NGO") {
+                const response = await NGO.create(finalObj);
+                const url = `${process.env.ClientURL}/registration?status=success`
+                return res.status(201).redirect(url)
+            } else if (finalObj?.formName === "ESG") {
+                await ESG.create(finalObj);
+                const url = `${process.env.ClientURL}/registration?status=success`
+                return res.status(201).redirect(url)
+            } else if (finalObj?.formName === "CSR") {
+                await CSR.create(finalObj)
+                const url = `${process.env.ClientURL}/registration?status=success`
+                return res.status(201).redirect(url)
+            }
+        } else {
+            const url = `${process.env.ClientURL}/registration?status=cancel`
+            return res.redirect(url)
+        }
+    })
+        .catch((error) => {
+            console.log(error)
+            const url = `${process.env.ClientURL}/registration?status=fail`
+            return res.redirect(url)
+        });
+};
+
 
 applicationCtrl.GetSingle = async (req, res) => {
     let applicationId = req.params.id;

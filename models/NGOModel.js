@@ -11,17 +11,15 @@ const NGOSchema = new mongoose.Schema({
     legalStatus: { type: String },
     csrNumber: { type: String },
     paymentDetails: {
-        type: {
-            mode: { type: String },
-            amount: { type: String },
-            amountWithGst: { type: String },
-            ss: { type: String },
-            transactionId: { type: String },
-        },
-        default: {}
+        mode: { type: String },
+        amount: { type: String },
+        amountWithGst: { type: String },
+        ss: { type: String },
+        transactionId: { type: String },
+        muid: { type: String },
     },
     attachments: { type: [] },
-    formName:{type:String, default:"NGO"}
+    formName: { type: String, default: "NGO" }
 
 }, { timestamps: true })
 

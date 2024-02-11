@@ -6,6 +6,8 @@ router.post("/create-csr", upload.array('files'), applicationCtrl.CreateCSR);
 router.post("/create-esg", upload.array('files'), applicationCtrl.CreateESG);
 router.post("/create-ngo", upload.array('files'), applicationCtrl.CreateNGO);
 
+router.get('/status/:txnId', applicationCtrl.checkStatus);
+
 router.get("/get-all", applicationCtrl.GetAllApplications);
 
 router.get("/ngo-get-all", applicationCtrl.GetAllNGOs);

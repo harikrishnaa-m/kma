@@ -13,17 +13,15 @@ const CSRSchema = new mongoose.Schema({
     awardCategory: { type: String },
     kma_member: { type: Boolean, default: false },
     paymentDetails: {
-        type: {
-            mode: { type: String },
-            amount: { type: String },
-            amountWithGst: { type: String },
-            ss: { type: String },
-            transactionId: { type: String },
-        },
-        default: {}
+        mode: { type: String },
+        amount: { type: String },
+        amountWithGst: { type: String },
+        ss: { type: String },
+        transactionId: { type: String },
+        muid: { type: String },
     },
     attachments: { type: [] },
-    formName:{type:String, default:"CSR"}
+    formName: { type: String, default: "CSR" }
 
 }, { timestamps: true })
 
