@@ -209,8 +209,8 @@ applicationCtrl.CreateESG = async (req, res) => {
 
         // create the obj for the payment 
         let createObj = {
-            organization,
-            address,
+            organization:organization,
+            address:address,
             contactPerson,
             email,
             phone,
@@ -220,11 +220,11 @@ applicationCtrl.CreateESG = async (req, res) => {
             stockExchange,
             kma_member,
             paymentDetails: {
-                mode,
-                amount,
-                amountWithGst,
-                ss,
-                transactionId
+                mode:mode,
+                amount:amount,
+                amountWithGst:amountWithGst,
+                ss:ss,
+                transactionId:transactionId
             },
             formName: "ESG"
         }
@@ -243,7 +243,7 @@ applicationCtrl.CreateESG = async (req, res) => {
         console.log(createObj)
 
         // conditionally check this is a online or offline payment
-        if (mode == 'Online') {
+        if (req.body.mode == 'Online') {
             console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
