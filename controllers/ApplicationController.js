@@ -50,8 +50,8 @@ applicationCtrl.CreateNGO = async (req, res) => {
 
         // create the obj for the payment 
         let createObj = {
-            organization,
-            address,
+            organization:organization,
+            address:address,
             contactPerson,
             email,
             phone,
@@ -60,11 +60,11 @@ applicationCtrl.CreateNGO = async (req, res) => {
             legalStatus,
             csrNumber,
             paymentDetails: {
-                mode,
-                amount,
-                amountWithGst,
-                ss,
-                transactionId
+                mode: mode,
+                amount: amount,
+                amountWithGst: amountWithGst,
+                ss: ss,
+                transactionId: transactionId
             },
             formName: "NGO"
         }
@@ -139,11 +139,11 @@ applicationCtrl.CreateCSR = async (req, res) => {
             awardCategory,
             kma_member,
             paymentDetails: {
-                mode,
-                amount,
-                amountWithGst,
-                ss,
-                transactionId,
+                mode: mode,
+                amount: amount,
+                amountWithGst: amountWithGst,
+                ss: ss,
+                transactionId: transactionId
             },
             formName: "CSR"
         }
@@ -209,8 +209,8 @@ applicationCtrl.CreateESG = async (req, res) => {
 
         // create the obj for the payment 
         let createObj = {
-            organization:organization,
-            address:address,
+            organization: organization,
+            address: address,
             contactPerson,
             email,
             phone,
@@ -220,11 +220,11 @@ applicationCtrl.CreateESG = async (req, res) => {
             stockExchange,
             kma_member,
             paymentDetails: {
-                mode:mode,
-                amount:amount,
-                amountWithGst:amountWithGst,
-                ss:ss,
-                transactionId:transactionId
+                mode: mode,
+                amount: amount,
+                amountWithGst: amountWithGst,
+                ss: ss,
+                transactionId: transactionId
             },
             formName: "ESG"
         }
@@ -394,43 +394,52 @@ applicationCtrl.checkStatus = async (req, res) => {
 
     // CHECK PAYMENT STATUS
     axios.request(options).then(async (response) => {
-        
+
         if (response.data.success === true) {
-             generateMail(finalObj)
+
             if (finalObj?.formName === "NGO") {
                 const response = await NGO.create(finalObj);
                 console.log(response)
                 console.log(finalObj)
-                const url = `https://kma.qmarkdesk.com/registration?status=success`
+                // const url = `https://kma.qmarkdesk.com/registration?status=success`
                 // const url = `${process.env.ClientURL}/registration?status=success`
-                return res.status(201).redirect(url)
+                // return res.status(201).redirect(url)
 
             } else if (finalObj?.formName === "ESG") {
                 const response = await ESG.create(finalObj);
                 console.log(response)
                 console.log(finalObj)
-                const url = `https://kma.qmarkdesk.com/registration?status=success`
+                // const url = `https://kma.qmarkdesk.com/registration?status=success`
                 // const url = `${process.env.ClientURL}/registration?status=success`
-                return res.status(201).redirect(url)
-                
+                // return res.status(201).redirect(url)
+
             } else if (finalObj?.formName === "CSR") {
-               const response =  await CSR.create(finalObj);
-               console.log(response)
-               console.log(finalObj)
-                const url = `https://kma.qmarkdesk.com/registration?status=success`
+                const response = await CSR.create(finalObj);
+                console.log(response)
+                console.log(finalObj)
+                // const url = `https://kma.qmarkdesk.com/registration?status=success`
                 // const url = `${process.env.ClientURL}/registration?status=success`
-                return res.status(201).redirect(url)
-                
+                // return res.status(201).redirect(url)
             }
+
+
+            // After successful payment and database operation, generate and send the email
+            await generateMail(finalObj)
+                .then(() => console.log("Email sent successfully"))
+                .catch((error) => console.log("Error sending email:", error));
+
+            // Redirect to success page
+            const url = `https://kma.qmarkdesk.com/registration?status=success`;
+            return res.status(201).redirect(url);
         } else {
-            const url = `https://kma.qmarkdesk.com//registration?status=cancel`
+            const url = `https://kma.qmarkdesk.com/registration?status=cancel`
             // const url = `${process.env.ClientURL}/registration?status=cancel`
             return res.redirect(url)
         }
     })
         .catch((error) => {
             console.log(error)
-            const url = `https://kma.qmarkdesk.com//registration?status=fail`
+            const url = `https://kma.qmarkdesk.com/registration?status=fail`
             // const url = `${process.env.ClientURL}/registration?status=fail`
             return res.redirect(url)
         });
