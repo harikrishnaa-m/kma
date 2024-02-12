@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 function mailGenerate(email,organization,transactionId) {
-    console.log(data)
+    console.log(email,organization,transactionId)
     return new Promise((resolve, reject) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',

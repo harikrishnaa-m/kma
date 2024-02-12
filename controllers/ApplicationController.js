@@ -398,8 +398,7 @@ applicationCtrl.checkStatus = async (req, res) => {
         const email = finalObj?.email
         const transactionID = finalObj?.paymentDetails?.transactionId
         const organization = finalObj?.organization
-
-
+        
         console.log(finalObj)
 
         if (response.data.success === true) {
