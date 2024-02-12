@@ -332,7 +332,7 @@ const newPayment = async (req, res, obj) => {
             merchantUserId: obj.paymentDetails.muid,
             name: obj.head,
             amount: 1 * 100,
-            redirectUrl: `http://localhost:9000/api/application/status/${merchantTransactionId}`,
+            redirectUrl: `https://kma.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
             redirectMode: 'GET',
             mobileNumber: obj.phone,
             paymentInstrument: {
@@ -398,7 +398,7 @@ applicationCtrl.checkStatus = async (req, res) => {
         const email = finalObj?.email
         const transactionID = finalObj?.paymentDetails?.transactionId
         const organization = finalObj?.organization
-        
+
         console.log(finalObj)
 
         if (response.data.success === true) {
@@ -425,18 +425,16 @@ applicationCtrl.checkStatus = async (req, res) => {
                 .catch((error) => console.log("Error sending email:", error));
 
             // Redirect to success page
-            const url = `https://kma.qmarkdesk.com/registration?status=success`;
+            const url = "https://kma.qmarkdesk.com/registration?status=success";
             return res.status(201).redirect(url);
         } else {
-            const url = `https://kma.qmarkdesk.com/registration?status=cancel`
-            // const url = `${process.env.ClientURL}/registration?status=cancel`
+            const url = "https://kma.qmarkdesk.com/registration?status=cancel"
             return res.redirect(url)
         }
     })
         .catch((error) => {
             console.log(error)
-            const url = `https://kma.qmarkdesk.com/registration?status=fail`
-            // const url = `${process.env.ClientURL}/registration?status=fail`
+            const url = "https://kma.qmarkdesk.com/registration?status=fail"
             return res.redirect(url)
         });
 };
