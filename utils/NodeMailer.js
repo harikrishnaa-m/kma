@@ -1,21 +1,21 @@
 const nodemailer = require("nodemailer");
 
 function mailGenerate(data) {
+    return new Promise((resolve, reject) => {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.NO_MA_USER,
+                pass: process.env.NO_MA_PASSWORD
+            }
+        });
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.NO_MA_USER,
-            pass: process.env.NO_MA_PASSWORD
-        }
-    });
-
-    const mailOptions = {
-        from: process.env.NO_MA_USER,
-        to: data?.email,
-        cc: "info@kma.org.in",
-        subject: "Successful Registration for KMA CSR Award 2024 ",
-        html: `<html>
+        const mailOptions = {
+            from: process.env.NO_MA_USER,
+            to: data?.email,
+            cc: "info@kma.org.in",
+            subject: "Successful Registration for KMA CSR Award 2024 ",
+            html: `<html>
         <head>
         <style>
             /* Inline CSS styles */
@@ -156,14 +156,17 @@ function mailGenerate(data) {
         </footer>
     </body>
         </html>`
-    };
+        };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                reject(error); // Reject the promise if there's an error
+            } else {
+                console.log('Email sent: ' + info.response);
+                resolve(); // Resolve the promise if email is sent successfully
+            }
+        });
     });
 }
 

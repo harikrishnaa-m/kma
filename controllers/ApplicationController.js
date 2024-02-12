@@ -50,8 +50,8 @@ applicationCtrl.CreateNGO = async (req, res) => {
 
         // create the obj for the payment 
         let createObj = {
-            organization:organization,
-            address:address,
+            organization: organization,
+            address: address,
             contactPerson,
             email,
             phone,
@@ -424,8 +424,7 @@ applicationCtrl.checkStatus = async (req, res) => {
 
 
             // After successful payment and database operation, generate and send the email
-            await generateMail(finalObj)
-                .then(() => console.log("Email sent successfully"))
+            await generateMail(finalObj).then(() => console.log("Email sent successfully"))
                 .catch((error) => console.log("Error sending email:", error));
 
             // Redirect to success page
