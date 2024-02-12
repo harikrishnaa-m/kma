@@ -395,36 +395,34 @@ applicationCtrl.checkStatus = async (req, res) => {
     // CHECK PAYMENT STATUS
     axios.request(options).then(async (response) => {
 
+        const email = finalObj?.email
+        const transactionID = finalObj?.paymentDetails?.transactionId
+        const organization = finalObj?.organization
+
+
+        console.log(finalObj)
+
         if (response.data.success === true) {
 
             if (finalObj?.formName === "NGO") {
                 const response = await NGO.create(finalObj);
                 console.log(response)
                 console.log(finalObj)
-                // const url = `https://kma.qmarkdesk.com/registration?status=success`
-                // const url = `${process.env.ClientURL}/registration?status=success`
-                // return res.status(201).redirect(url)
 
             } else if (finalObj?.formName === "ESG") {
                 const response = await ESG.create(finalObj);
                 console.log(response)
                 console.log(finalObj)
-                // const url = `https://kma.qmarkdesk.com/registration?status=success`
-                // const url = `${process.env.ClientURL}/registration?status=success`
-                // return res.status(201).redirect(url)
 
             } else if (finalObj?.formName === "CSR") {
                 const response = await CSR.create(finalObj);
                 console.log(response)
                 console.log(finalObj)
-                // const url = `https://kma.qmarkdesk.com/registration?status=success`
-                // const url = `${process.env.ClientURL}/registration?status=success`
-                // return res.status(201).redirect(url)
             }
 
 
             // After successful payment and database operation, generate and send the email
-            await generateMail(finalObj).then(() => console.log("Email sent successfully"))
+            await generateMail(email, organization, transactionID).then(() => console.log("Email sent successfully"))
                 .catch((error) => console.log("Error sending email:", error));
 
             // Redirect to success page

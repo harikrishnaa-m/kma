@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 
-function mailGenerate(data) {
+function mailGenerate(email,organization,transactionId) {
+    console.log(data)
     return new Promise((resolve, reject) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -12,7 +13,7 @@ function mailGenerate(data) {
 
         const mailOptions = {
             from: process.env.NO_MA_USER,
-            to: data?.email,
+            to: email,
             cc: "info@kma.org.in",
             subject: "Successful Registration for KMA CSR Award 2024 ",
             html: `<html>
@@ -101,7 +102,7 @@ function mailGenerate(data) {
     <body>
         <section>
             <h1 class="heading">Successful Registration for KMA CSR Award 2024 </h1>
-            <h4>Dear ${data?.organization},</h4>
+            <h4>Dear ${organization},</h4>
             <p class="message">We are delighted to inform you that your registration for the <span class="bolderFont"> KMA
                     CSR
                     Award 2024</span>
@@ -109,7 +110,7 @@ function mailGenerate(data) {
                 been successfully received. Your commitment to corporate social responsibility is truly commendable.
             </p>
             <h4>Transaction Details</h4>
-            <p class="TrHead"> <span>Transaction ID : </span>${data?.paymentDetails?.transactionId}</p>
+            <p class="TrHead"> <span>Transaction ID : </span>${transactionId}</p>
             <p class="tBody">
                 Our esteemed jury will meticulously evaluate your nomination. The award ceremony is scheduled
                 for <span class="bolderFont"> March 7th,</span> and
