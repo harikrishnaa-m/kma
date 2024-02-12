@@ -332,7 +332,7 @@ const newPayment = async (req, res, obj) => {
             merchantUserId: obj.paymentDetails.muid,
             name: obj.head,
             amount: 1 * 100,
-            redirectUrl: `https://kma.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
+            redirectUrl: `https://server.kmaaward.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
             redirectMode: 'GET',
             mobileNumber: obj.phone,
             paymentInstrument: {
