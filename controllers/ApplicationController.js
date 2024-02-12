@@ -40,7 +40,6 @@ applicationCtrl.CreateNGO = async (req, res) => {
         ss,
     } = req.body;
 
-    console.log(req.body)
     try {
         const exist = await NGO.find({ phone });
         const emailExist = await NGO.find({ email });
@@ -80,13 +79,11 @@ applicationCtrl.CreateNGO = async (req, res) => {
 
         // conditionally check this is a online or offline payment
         if (mode == 'Online') {
-            console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
         } else {
-            console.log("i am enter the else")
             const newNGOAppln = await NGO.create(createObj);
             res.status(200).json(newNGOAppln);
         }
@@ -117,7 +114,7 @@ applicationCtrl.CreateCSR = async (req, res) => {
         transactionId,
         ss,
     } = req.body;
-    console.log(req.body)
+
     try {
         const exist = await CSR.find({ phone });
         const emailExist = await CSR.find({ email });
@@ -155,19 +152,16 @@ applicationCtrl.CreateCSR = async (req, res) => {
             req.files.map((file) => (
                 attached.push({ key: file.key, location: file.location })
             ))
-
             createObj.attachments = attached;
         }
 
         // conditionally check this is a online or offline payment
         if (mode == 'Online') {
-            console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
         } else {
-            console.log("i am enter Else")
             const newCSRAppln = await CSR.create(createObj);
             res.status(200).json(newCSRAppln);
         }
@@ -236,11 +230,8 @@ applicationCtrl.CreateESG = async (req, res) => {
             req.files.map((file) => (
                 attached.push({ key: file.key, location: file.location })
             ))
-
             createObj.attachments = attached;
         }
-
-        console.log(createObj)
 
         // conditionally check this is a online or offline payment
         if (mode == 'Online') {
@@ -261,63 +252,7 @@ applicationCtrl.CreateESG = async (req, res) => {
     }
 }
 
-applicationCtrl.GetAllApplications = async (req, res) => {
-
-    try {
-        const allNGOs = await NGO.find();
-        const allCSRs = await CSR.find();
-        const allESGs = await ESG.find();
-
-        const result = [...allNGOs, ...allCSRs, ...allESGs]
-
-        res.status(200).json(result)
-
-    } catch (error) {
-        res.status(500).json({ msg: "Something went wrong" })
-
-    }
-}
-
-applicationCtrl.GetAllNGOs = async (req, res) => {
-
-    try {
-        const allNGOs = await NGO.find();
-
-        res.status(200).json(allNGOs)
-
-    } catch (error) {
-        res.status(500).json({ msg: "Something went wrong" })
-
-    }
-}
-
-applicationCtrl.GetAllCSRs = async (req, res) => {
-
-    try {
-        const allCSRs = await CSR.find();
-
-        res.status(200).json(allCSRs)
-
-    } catch (error) {
-        res.status(500).json({ msg: "Something went wrong" })
-
-    }
-}
-
-applicationCtrl.GetAllESGs = async (req, res) => {
-
-    try {
-
-        const allESGs = await ESG.find();
-
-        res.status(200).json(allESGs)
-
-    } catch (error) {
-        res.status(500).json({ msg: "Something went wrong" })
-
-    }
-}
-
+// Payment integration
 let finalObj;
 const newPayment = async (req, res, obj) => {
     finalObj = obj
@@ -331,7 +266,7 @@ const newPayment = async (req, res, obj) => {
             merchantTransactionId: merchantTransactionId,
             merchantUserId: obj.paymentDetails.muid,
             name: obj.head,
-            amount: 1 * 100,
+            amount: obj?.paymentDetails?.amountWithGst * 100,
             redirectUrl: `https://server.kmaaward.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
             redirectMode: 'GET',
             mobileNumber: obj.phone,
@@ -399,26 +334,18 @@ applicationCtrl.checkStatus = async (req, res) => {
         const transactionID = finalObj?.paymentDetails?.transactionId
         const organization = finalObj?.organization
 
-        console.log(finalObj)
-
         if (response.data.success === true) {
 
             if (finalObj?.formName === "NGO") {
                 const response = await NGO.create(finalObj);
-                console.log(response)
-                console.log(finalObj)
 
             } else if (finalObj?.formName === "ESG") {
                 const response = await ESG.create(finalObj);
-                console.log(response)
-                console.log(finalObj)
 
             } else if (finalObj?.formName === "CSR") {
                 const response = await CSR.create(finalObj);
-                console.log(response)
-                console.log(finalObj)
-            }
 
+            }
 
             // After successful payment and database operation, generate and send the email
             await generateMail(email, organization, transactionID).then(() => console.log("Email sent successfully"))
@@ -439,6 +366,63 @@ applicationCtrl.checkStatus = async (req, res) => {
         });
 };
 
+
+applicationCtrl.GetAllApplications = async (req, res) => {
+
+    try {
+        const allNGOs = await NGO.find();
+        const allCSRs = await CSR.find();
+        const allESGs = await ESG.find();
+
+        const result = [...allNGOs, ...allCSRs, ...allESGs]
+
+        res.status(200).json(result)
+
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong" })
+
+    }
+}
+
+applicationCtrl.GetAllNGOs = async (req, res) => {
+
+    try {
+        const allNGOs = await NGO.find();
+
+        res.status(200).json(allNGOs)
+
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong" })
+
+    }
+}
+
+applicationCtrl.GetAllCSRs = async (req, res) => {
+
+    try {
+        const allCSRs = await CSR.find();
+
+        res.status(200).json(allCSRs)
+
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong" })
+
+    }
+}
+
+applicationCtrl.GetAllESGs = async (req, res) => {
+
+    try {
+
+        const allESGs = await ESG.find();
+
+        res.status(200).json(allESGs)
+
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong" })
+
+    }
+}
 
 applicationCtrl.GetSingle = async (req, res) => {
     let applicationId = req.params.id;
