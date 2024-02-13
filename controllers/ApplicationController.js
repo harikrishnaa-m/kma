@@ -368,21 +368,43 @@ applicationCtrl.checkStatus = async (req, res) => {
 
 
 applicationCtrl.GetAllApplications = async (req, res) => {
+    const page = req.query.page;
+    const entries = req.query.entries;
+    const searchQuery = req.query.search;
 
     try {
-        const allNGOs = await NGO.find();
-        const allCSRs = await CSR.find();
-        const allESGs = await ESG.find();
+        let query = {};
+        if (searchQuery) {
+            query = {
+                $or: [
+                    { head: { $regex: searchQuery, $options: 'i' } },
+                    { organization: { $regex: searchQuery, $options: 'i' } },
+                    { email: { $regex: searchQuery, $options: 'i' } },
+                ]
+            };
+        }
 
-        const result = [...allNGOs, ...allCSRs, ...allESGs]
+        const allNGOs = await NGO.find(query);
+        const allCSRs = await CSR.find(query);
+        const allESGs = await ESG.find(query);
 
-        res.status(200).json(result)
+        let result = [...allNGOs, ...allCSRs, ...allESGs];
 
+        if (page) {
+            if (entries) {
+                result = result.slice(((page - 1) * entries), (page * entries));
+            } else {
+                result = result.slice(((page - 1) * 10), (page * 10));
+            }
+        }
+
+        res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong" })
-
+        console.log(error)
+        res.status(500).json({ msg: "Something went wrong" });
     }
 }
+
 
 applicationCtrl.GetAllNGOs = async (req, res) => {
 
