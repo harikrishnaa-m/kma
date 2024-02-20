@@ -18,7 +18,7 @@ const s3Client = new S3Client({
 // Upload files to AWS S3 Bucket;
 
 const upload = multer({
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 25 * 1024 * 1024 },
     storage: multerS3({
         s3: s3Client,
         bucket: Bucket,
@@ -26,16 +26,8 @@ const upload = multer({
             const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1e9)
             cb(null, 'Documents/' + `${uniquePrefix}-${file.originalname}`);
         },
-
     }),
-
 });
 
-// function multerFileSizeLimitHandler(err, req, res, next) {
-//     if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-//         return res.status(400).json({ error: 'File size exceeds the limit (10MB)' });
-//     }
-//     next(err);
-// }
 
 module.exports = upload;
