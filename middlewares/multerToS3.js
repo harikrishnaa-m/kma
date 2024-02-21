@@ -16,7 +16,6 @@ const s3Client = new S3Client({
 })
 
 // Upload files to AWS S3 Bucket;
-
 const upload = multer({
     limits: { fileSize: 25 * 1024 * 1024 },
     storage: multerS3({

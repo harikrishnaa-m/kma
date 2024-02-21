@@ -11,6 +11,7 @@ const CSRSchema = new mongoose.Schema({
     orgType: { type: String },
     orgCategory: { type: String },
     awardCategory: { type: String },
+    GSTNumber: { type: String },
     kma_member: { type: Boolean, default: false },
     paymentDetails: {
         mode: { type: String },

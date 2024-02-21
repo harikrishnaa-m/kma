@@ -33,6 +33,7 @@ applicationCtrl.CreateNGO = async (req, res) => {
         head,
         legalStatus,
         csrNumber,
+        GSTNumber,
         mode,
         amount,
         amountWithGst,
@@ -54,6 +55,7 @@ applicationCtrl.CreateNGO = async (req, res) => {
             contactPerson,
             email,
             phone,
+            GSTNumber,
             website,
             head,
             legalStatus,
@@ -110,10 +112,12 @@ applicationCtrl.CreateCSR = async (req, res) => {
         kma_member,
         mode,
         amount,
+        GSTNumber,
         amountWithGst,
         transactionId,
         ss,
     } = req.body;
+
 
     try {
         const exist = await CSR.find({ phone });
@@ -134,6 +138,7 @@ applicationCtrl.CreateCSR = async (req, res) => {
             orgType,
             orgCategory,
             awardCategory,
+            GSTNumber,
             kma_member,
             paymentDetails: {
                 mode: mode,
@@ -186,6 +191,7 @@ applicationCtrl.CreateESG = async (req, res) => {
         stockExchange,
         kma_member,
         mode,
+        GSTNumber,
         amount,
         amountWithGst,
         transactionId,
@@ -211,6 +217,7 @@ applicationCtrl.CreateESG = async (req, res) => {
             website,
             head,
             orgType,
+            GSTNumber,
             stockExchange,
             kma_member,
             paymentDetails: {

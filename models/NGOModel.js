@@ -7,6 +7,7 @@ const NGOSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     phone: { type: Number, unique: true },
     website: { type: String },
+    GSTNumber: { type: String },
     head: { type: String },
     legalStatus: { type: String },
     csrNumber: { type: String },

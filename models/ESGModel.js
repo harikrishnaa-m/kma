@@ -9,6 +9,7 @@ const ESGSchema = new mongoose.Schema({
     website: { type: String },
     head: { type: String },
     orgType: { type: String },
+    GSTNumber: { type: String },
     stockExchange: { type: String },
     kma_member: { type: Boolean, default: false },
     paymentDetails: {
