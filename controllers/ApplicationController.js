@@ -45,8 +45,8 @@ applicationCtrl.CreateNGO = async (req, res) => {
         const exist = await NGO.find({ phone });
         const emailExist = await NGO.find({ email });
         if (!organization) return res.status(400).json({ msg: "Bad Request" })
-        if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
-        if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
+        // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
+        // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
         // create the obj for the payment 
         let createObj = {
@@ -123,8 +123,8 @@ applicationCtrl.CreateCSR = async (req, res) => {
         const exist = await CSR.find({ phone });
         const emailExist = await CSR.find({ email });
         if (!organization) return res.status(400).json({ msg: "Bad Request" })
-        if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
-        if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
+        // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
+        // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
         // create the obj for the payment 
         let createObj = {
@@ -204,8 +204,8 @@ applicationCtrl.CreateESG = async (req, res) => {
         const exist = await ESG.find({ phone });
         const emailExist = await ESG.find({ email });
         if (!organization) return res.status(400).json({ msg: "Bad Request" })
-        if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
-        if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
+        // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
+        // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
         // create the obj for the payment 
         let createObj = {
