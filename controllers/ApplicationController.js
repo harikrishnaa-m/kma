@@ -375,8 +375,8 @@ applicationCtrl.checkStatus = async (req, res) => {
 
 
 applicationCtrl.GetAllApplications = async (req, res) => {
-    const page = req.query.page;
-    const entries = req.query.entries;
+    const page = parseInt(req.query.page) || 1;
+    const entries = parseInt(req.query.entries) || 10;
     const searchQuery = req.query.search;
 
     try {
@@ -397,20 +397,22 @@ applicationCtrl.GetAllApplications = async (req, res) => {
 
         let result = [...allNGOs, ...allCSRs, ...allESGs];
 
-        if (page) {
-            if (entries) {
-                result = result.slice(((page - 1) * entries), (page * entries));
-            } else {
-                result = result.slice(((page - 1) * 10), (page * 10));
-            }
-        }
+        // Sort the result based on the time property
+        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        res.status(200).json(result);
+
+        // Applying pagination
+        const startIndex = (page - 1) * entries;
+        const endIndex = startIndex + entries;
+        const paginatedResult = result.slice(startIndex, endIndex);
+
+        res.status(200).json(paginatedResult);
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ msg: "Something went wrong" });
     }
 }
+
 
 
 applicationCtrl.GetAllNGOs = async (req, res) => {
