@@ -1,36 +1,57 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
-const {  generateAccessToken, generateRefreshToken } = require("../middlewares/tokenMiddlewares.js");
+const { generateAccessToken, generateRefreshToken } = require("../middlewares/tokenMiddlewares.js");
 const User = require("../models/UserModel.js");
+const rateLimit = require('express-rate-limit');
+const Joi = require('joi');
+
 const authCtrl = {};
 
+const delayForSecurity = () => new Promise(resolve => setTimeout(resolve, 500));
 
-// Authentication method for Admin/Employee/Student;
+authCtrl.loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 login attempts per window
+    message: { msg: "Too many login attempts. Please try again later." },
+});
+
 authCtrl.Login = async (req, res) => {
-    const name = req.body.name;
-    console.log("name", name)
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().min(8).required(),
+    });
+
+    const { error, value } = schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ msg: error.details[0].message });
+    }
+
+    const { email, password } = value;
 
     try {
-        // const emailCaseRegex = new RegExp(email, 'i')
+        const escapeRegex = str => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const emailCaseRegex = new RegExp(`^${escapeRegex(email)}$`, 'i');
 
-        const user = await User.findOne({ name: name }).lean();
+        const user = await User.findOne({ email: emailCaseRegex }).lean();
 
         if (!user) {
-            return res.status(401).json({ msg: "Invalid name" })
+            await delayForSecurity();
+            return res.status(401).json({ msg: "Invalid credentials" });
         }
 
-        const isValidPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!isValidPassword) return res.status(401).json({ msg: "Invalid  password" });
+        const isValidPassword = await bcrypt.compare(password, user.password);
 
+        if (!isValidPassword) {
+            await delayForSecurity();
+            return res.status(401).json({ msg: "Invalid credentials" });
+        }
 
-        console.log(isValidPassword)
         const accessToken = generateAccessToken({ userId: user._id, role: user.role })
 
         const refreshToken = generateRefreshToken({ userId: user._id, role: user.role })
 
-        const { password, ...userInfo } = user;
+        const { password: _, ...userInfo } = user;
 
         res.status(200).json({ userInfo, accessToken, refreshToken })
 
@@ -57,15 +78,7 @@ authCtrl.regenerateTokens = async (req, res) => {
     })
 }
 
-//Terminate session by deleting tokens in frontend;
-
-// authCtrl.Logout = async (req, res) => {
-
-//     res.clearCookie("access_token");
-//     res.clearCookie("refresh_token");
-
-//     res.sendStatus(204)
-// }
+// Logout by deleting tokens in frontend;
 
 
 module.exports = authCtrl;

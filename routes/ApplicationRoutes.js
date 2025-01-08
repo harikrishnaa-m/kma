@@ -4,10 +4,10 @@ const { adminChecker } = require("../middlewares/adminChecker");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const { upload } = require("../middlewares/multerToS3");
 
-router.post("/create-csr", upload.array('files'), applicationCtrl.CreateCSR);
-router.post("/create-ngo", upload.array('files'), applicationCtrl.CreateNGO);
-router.post("/create-se", upload.array('files'), applicationCtrl.CreateSE);
-router.post("/create-ss", upload.array('files'), applicationCtrl.CreateSS);
+router.post("/create-csr", applicationCtrl.CreateCSR);
+router.post("/create-ngo", applicationCtrl.CreateNGO);
+router.post("/create-se", applicationCtrl.CreateSE);
+router.post("/create-ss", applicationCtrl.CreateSS);
 
 router.get('/status/:txnId', applicationCtrl.checkStatus);
 
