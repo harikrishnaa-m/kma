@@ -1,28 +1,69 @@
 const mongoose = require("mongoose");
 
 const CSRSchema = new mongoose.Schema({
-    organization: { type: String, required: true },
-    address: { type: String },
-    contactPerson: { type: String },
-    email: { type: String},
-    phone: { type: Number },
-    website: { type: String },
-    head: { type: String },
-    orgType: { type: String },
-    orgCategory: { type: String },
-    awardCategory: { type: String },
-    GSTNumber: { type: String },
-    kma_member: { type: Boolean, default: false },
-    paymentDetails: {
-        mode: { type: String },
-        amount: { type: String },
-        amountWithGst: { type: String },
-        ss: { type: String },
-        transactionId: { type: String },
-        muid: { type: String },
+    organizationProfile: {
+        name: { type: String, required: true },
+        address: { type: String },
+        contactPerson: {
+            name: { type: String, required: true },
+            mobile: { type: String },
+            email: { type: String },
+        },
+        website: { type: String },
+        headOfOrganization: { type: String },
+
     },
-    attachments: { type: [] },
-    formName: { type: String, default: "CSR" }
+    
+
+    projectDetails: {
+        name: { type: String, required: true },
+        awardCategory: { type: String, required: true },
+        organizationType: { type: String, enum: ["NGO", "Company", "Others"], required: true },
+        annualCSRBudget: { type: String },
+        gstNumber: { type: String },
+    },
+
+    financialDetails: {
+        applicationAmountWithGST: { type: Number, required: true },
+        paymentMethod: { type: String, required: true },
+        paymentReceipt: {
+            name: { type: String },
+            key: { type: String },
+            size: { type: String },
+            location: { type: String },
+        },
+    },
+
+    csrProjectOverview: { type: String },
+
+    impactMetrics: [String],
+
+    innovationAndScalability: {
+        innovationDescription: { type: String, required: true },
+        scalabilityPotential: { type: String, required: true },
+    },
+
+    attachments: {
+        organizationProfile: {
+            name: { type: String },
+            key: { type: String },
+            size: { type: String },
+            location: { type: String },
+        },
+        csrPolicyAndPractice: {
+            name: { type: String },
+            key: { type: String },
+            size: { type: String },
+            location: { type: String },
+        },
+        csrProjectReport: {
+            name: { type: String },
+            key: { type: String },
+            size: { type: String },
+            location: { type: String },
+        },
+    }
+
 
 }, { timestamps: true })
 
