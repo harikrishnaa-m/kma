@@ -1,8 +1,17 @@
 const mongoose = require("mongoose");
 
 const SustainabilityStartupSchema = new mongoose.Schema({
-    basicInformation: {
-        startupName: { type: String, required: true },
+    formName: { type: String, default: "SS", immutable:true },
+    
+    organizationProfile: {
+        name: { type: String, required: true },
+        address: { type: String },
+        contactPerson: {type: String },
+        mobile: { type: String },
+        email: { type: String },
+        website: { type: String },
+        head: { type: String },
+        
         establishedDate: { type: Date, required: true },
         foundersAndTeam: { type: String },
         location: { type: String },
@@ -67,6 +76,20 @@ const SustainabilityStartupSchema = new mongoose.Schema({
             location: { type: String }
         },
     },
+
+    paymentDetails: {
+        mode: { type: String },
+        amount: { type: Number },
+        amountWithGst: { type: Number },
+        transactionId: { type: String },
+        muid: { type: String },
+        receipt: {
+            name: { type: String },
+            key: { type: String },
+            location: { type: String },
+        },
+    },
+
 }, { timestamps: true });
 
 const SustainabilityStartup = mongoose.model("SustainabilityStartup", SustainabilityStartupSchema);

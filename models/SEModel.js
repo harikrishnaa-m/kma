@@ -1,8 +1,17 @@
 const mongoose = require("mongoose");
 
 const SustainableEnterpriseSchema = new mongoose.Schema({
+    formName: { type: String, default: "SE", immutable:true },
+    
     organizationProfile: {
-        registeredName: { type: String, required: true },
+        name: { type: String, required: true },
+        address: { type: String },
+        contactPerson: {type: String },
+        mobile: { type: String },
+        email: { type: String },
+        website: { type: String },
+        head: { type: String },
+        
         corporateOfficeLocation: { type: String},
         briefDescription: { type: String, maxlength: 100},
         ownershipDetails: { type: String},
@@ -80,6 +89,20 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
         emailAddress: { type: String },
         website: { type: String },
     },
+
+    paymentDetails: {
+        mode: { type: String },
+        amount: { type: Number },
+        amountWithGst: { type: Number },
+        transactionId: { type: String },
+        muid: { type: String },
+        receipt: {
+            name: { type: String },
+            key: { type: String },
+            location: { type: String },
+        },
+    },
+
 }, { timestamps: true });
 
 const SustainableEnterprise = mongoose.model("SustainableEnterprise", SustainableEnterpriseSchema);
