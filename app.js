@@ -24,6 +24,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use("/api/auth", authRouter);
 app.use("/api/application", applicationRouter)
 
-app.listen(9000, () => {
+app.listen(8080, () => {
     console.log("Server running successfully")
 })
