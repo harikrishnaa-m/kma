@@ -10,7 +10,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser')
 
 const ClientURL = process.env.ClientURL;
-const ClientURL2 = process.env.ClientURL2;
 
 ConnectDB()
 // app.use(cors({
@@ -25,7 +24,7 @@ const corsOptions = {
             callback(null, true);
 
         } else {
-            const allowedOrigins = [ClientURL, ClientURL2];
+            const allowedOrigins = [ClientURL];
 
             if (allowedOrigins.indexOf(origin) !== -1) {
                 callback(null, true);
