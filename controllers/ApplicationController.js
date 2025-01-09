@@ -208,7 +208,7 @@ applicationCtrl.checkStatus = async (req, res) => {
         const transactionID = finalObj?.paymentDetails?.transactionId
         const organization = finalObj?.organization
 
-        if (response.data.success === true) {
+        if (response.data.success === true && response?.data.code === 'PAYMENT_SUCCESS') {
 
             let createdDoc;
             if (finalObj?.formName === "NGO") {
