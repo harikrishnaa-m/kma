@@ -1,12 +1,13 @@
 const { isValidObjectId } = require("mongoose");
 const NGO = require("../models/NGOModel");
 const CSR = require("../models/CSRModel");
-const ESG = require("../models/ESGModel");
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const axios = require('axios');
 
-const generateMail = require('../utils/NodeMailer.js')
+const generateMail = require('../utils/NodeMailer.js');
+const SustainableEnterprise = require("../models/SEModel.js");
+const SustainabilityStartup = require("../models/SSModel.js");
 
 const applicationCtrl = {};
 
@@ -23,61 +24,14 @@ function generateTransactionId() {
 // Create NGO Application;
 applicationCtrl.CreateNGO = async (req, res) => {
 
-    const {
-        organization,
-        address,
-        contactPerson,
-        email,
-        phone,
-        website,
-        head,
-        legalStatus,
-        csrNumber,
-        GSTNumber,
-        mode,
-        amount,
-        amountWithGst,
-        transactionId,
-        ss,
-    } = req.body;
+    const createObj = req.body;
 
     try {
         const exist = await NGO.find({ phone });
         const emailExist = await NGO.find({ email });
-        if (!organization) return res.status(400).json({ msg: "Bad Request" })
+        if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
         // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
         // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
-
-        // create the obj for the payment 
-        let createObj = {
-            organization: organization,
-            address: address,
-            contactPerson,
-            email,
-            phone,
-            GSTNumber,
-            website,
-            head,
-            legalStatus,
-            csrNumber,
-            paymentDetails: {
-                mode: mode,
-                amount: amount,
-                amountWithGst: amountWithGst,
-                ss: ss,
-                transactionId: transactionId
-            },
-            formName: "NGO"
-        }
-
-        // File data arranging
-        let attached = [];
-        if (req.files.length > 0) {
-            req.files.map((file) => (
-                attached.push({ key: file.key, location: file.location })
-            ))
-            createObj.attachments = attached;
-        }
 
         // conditionally check this is a online or offline payment
         if (mode == 'Online') {
@@ -98,67 +52,14 @@ applicationCtrl.CreateNGO = async (req, res) => {
 
 // Create CSR Application;
 applicationCtrl.CreateCSR = async (req, res) => {
-    const {
-        organization,
-        address,
-        contactPerson,
-        email,
-        phone,
-        website,
-        head,
-        orgType,
-        orgCategory,
-        awardCategory,
-        kma_member,
-        mode,
-        amount,
-        GSTNumber,
-        amountWithGst,
-        transactionId,
-        ss,
-    } = req.body;
-
+    const createObj = req.body;
 
     try {
         const exist = await CSR.find({ phone });
         const emailExist = await CSR.find({ email });
-        if (!organization) return res.status(400).json({ msg: "Bad Request" })
+        if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
         // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
         // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
-
-        // create the obj for the payment 
-        let createObj = {
-            organization,
-            address,
-            contactPerson,
-            email,
-            phone,
-            website,
-            head,
-            orgType,
-            orgCategory,
-            awardCategory,
-            GSTNumber,
-            kma_member,
-            paymentDetails: {
-                mode: mode,
-                amount: amount,
-                amountWithGst: amountWithGst,
-                ss: ss,
-                transactionId: transactionId
-            },
-            formName: "CSR"
-        }
-
-        // File data arranging
-        let attached = [];
-
-        if (req.files.length > 0) {
-            req.files.map((file) => (
-                attached.push({ key: file.key, location: file.location })
-            ))
-            createObj.attachments = attached;
-        }
 
         // conditionally check this is a online or offline payment
         if (mode == 'Online') {
@@ -177,80 +78,22 @@ applicationCtrl.CreateCSR = async (req, res) => {
     }
 }
 
-// Create ESG Application;
-applicationCtrl.CreateESG = async (req, res) => {
-    const {
-        organization,
-        address,
-        contactPerson,
-        email,
-        phone,
-        website,
-        head,
-        orgType,
-        stockExchange,
-        kma_member,
-        mode,
-        GSTNumber,
-        amount,
-        amountWithGst,
-        transactionId,
-        ss,
-    } = req.body;
 
-    console.log(req.body)
+applicationCtrl.CreateSE = async (req, res) => {
+    const createObj = req.body;
 
     try {
-        const exist = await ESG.find({ phone });
-        const emailExist = await ESG.find({ email });
-        if (!organization) return res.status(400).json({ msg: "Bad Request" })
-        // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
-        // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
-        // create the obj for the payment 
-        let createObj = {
-            organization: organization,
-            address: address,
-            contactPerson,
-            email,
-            phone,
-            website,
-            head,
-            orgType,
-            GSTNumber,
-            stockExchange,
-            kma_member,
-            paymentDetails: {
-                mode: mode,
-                amount: amount,
-                amountWithGst: amountWithGst,
-                ss: ss,
-                transactionId: transactionId
-            },
-            formName: "ESG"
-        }
+        if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
-        // File data arranging
-        let attached = [];
-
-        if (req.files.length > 0) {
-            req.files.map((file) => (
-                attached.push({ key: file.key, location: file.location })
-            ))
-            createObj.attachments = attached;
-        }
-
-        // conditionally check this is a online or offline payment
         if (mode == 'Online') {
-            console.log("i am enter the Online")
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
         } else {
-            console.log("i am enter else")
-            const newESGAppln = await ESG.create(createObj);
-            res.status(200).json(newESGAppln);
+            const newSEAppln = await SustainableEnterprise.create(createObj);
+            res.status(200).json(newSEAppln);
         }
 
     } catch (error) {
@@ -258,6 +101,30 @@ applicationCtrl.CreateESG = async (req, res) => {
         res.status(500).json({ msg: "Something went wrong" });
     }
 }
+
+applicationCtrl.CreateSS = async (req, res) => {
+    const createObj = req.body;
+
+    try {
+        if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
+
+        if (mode == 'Online') {
+            const transactionID = generateTransactionId();
+            createObj.paymentDetails.muid = "MUID" + Date.now();
+            createObj.paymentDetails.transactionId = transactionID;
+            await newPayment(req, res, createObj)
+        } else {
+            const newSSAppln = await SustainabilityStartup.create(createObj);
+            res.status(200).json(newSSAppln);
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ msg: "Something went wrong" });
+    }
+}
+
+
 
 // Payment integration
 let finalObj;
@@ -343,17 +210,21 @@ applicationCtrl.checkStatus = async (req, res) => {
 
         if (response.data.success === true) {
 
+            let createdDoc;
             if (finalObj?.formName === "NGO") {
-                const response = await NGO.create(finalObj);
-
-            } else if (finalObj?.formName === "ESG") {
-                const response = await ESG.create(finalObj);
-
-            } else if (finalObj?.formName === "CSR") {
-                const response = await CSR.create(finalObj);
-
+                createdDoc = await NGO.create(finalObj);
+            }
+            else if (finalObj?.formName === "CSR") {
+                createdDoc = await CSR.create(finalObj);
+            }
+            else if (finalObj?.formName === "SE") {
+                createdDoc = await SustainableEnterprise.create(finalObj);
+            }
+            else if (finalObj?.formName === "SS") {
+                createdDoc = await SustainabilityStartup.create(finalObj);
             }
 
+            console.log({ createdDoc })
             // After successful payment and database operation, generate and send the email
             await generateMail(email, organization, transactionID).then(() => console.log("Email sent successfully"))
                 .catch((error) => console.log("Error sending email:", error));
@@ -384,18 +255,19 @@ applicationCtrl.GetAllApplications = async (req, res) => {
         if (searchQuery) {
             query = {
                 $or: [
-                    { head: { $regex: searchQuery, $options: 'i' } },
-                    { organization: { $regex: searchQuery, $options: 'i' } },
-                    { email: { $regex: searchQuery, $options: 'i' } },
+                    { "organizationProfile.name" : { $regex: searchQuery, $options: 'i' } },
+                    { "organizationProfile.head" : { $regex: searchQuery, $options: 'i' } },
+                    { "organizationProfile.email" : { $regex: searchQuery, $options: 'i' } },
                 ]
             };
         }
 
         const allNGOs = await NGO.find(query);
         const allCSRs = await CSR.find(query);
-        const allESGs = await ESG.find(query);
+        const allSEs = await SustainableEnterprise.find(query);
+        const allSSs = await SustainabilityStartup.find(query);
 
-        let result = [...allNGOs, ...allCSRs, ...allESGs];
+        let result = [...allNGOs, ...allCSRs, ...allSEs, ...allSSs];
 
         // Sort the result based on the time property
         result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -441,13 +313,27 @@ applicationCtrl.GetAllCSRs = async (req, res) => {
     }
 }
 
-applicationCtrl.GetAllESGs = async (req, res) => {
+applicationCtrl.GetAllSEs = async (req, res) => {
 
     try {
 
-        const allESGs = await ESG.find();
+        const allSEs = await SustainableEnterprise.find();
 
-        res.status(200).json(allESGs)
+        res.status(200).json(allSEs)
+
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong" })
+
+    }
+}
+
+applicationCtrl.GetAllSSs = async (req, res) => {
+
+    try {
+
+        const allSSs = await SustainabilityStartup.find();
+
+        res.status(200).json(allSSs)
 
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" })
@@ -469,13 +355,15 @@ applicationCtrl.GetSingle = async (req, res) => {
 
         if (type === "NGO") {
             result = await NGO.findById(applicationId)
-
-        } else if (type === "CSR") {
+        }
+        else if (type === "CSR") {
             result = await CSR.findById(applicationId)
-
-        } else if (type === "ESG") {
-            result = await ESG.findById(applicationId)
-
+        }
+        else if (type === "SE") {
+            result = await SustainableEnterprise.findById(applicationId)
+        }
+        else if (type === "SS") {
+            result = await SustainabilityStartup.findById(applicationId)
         }
 
         if (!result) return res.status(404).json({ msg: "Application not found" })
