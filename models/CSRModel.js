@@ -16,9 +16,9 @@ const CSRSchema = new mongoose.Schema({
     },
 
     projectDetails: {
-        name: { type: String, required: true },
-        awardCategory: { type: String, required: true },
-        organizationType: { type: String, enum: ["NGO", "Company", "Others"], required: true },
+        name: { type: String },
+        awardCategory: { type: String },
+        organizationType: { type: String, enum: ["NGO", "Company", "Others"] },
         annualCSRBudget: { type: String },
         gstNumber: { type: String },
     },
@@ -28,8 +28,8 @@ const CSRSchema = new mongoose.Schema({
     impactMetrics: [String],
 
     innovationAndScalability: {
-        innovationDescription: { type: String, required: true },
-        scalabilityPotential: { type: String, required: true },
+        innovationDescription: { type: String },
+        scalabilityPotential: { type: String },
     },
 
     attachments: {

@@ -27,14 +27,10 @@ applicationCtrl.CreateNGO = async (req, res) => {
     const createObj = req.body;
 
     try {
-        const exist = await NGO.find({ phone });
-        const emailExist = await NGO.find({ email });
+      
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
-        // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
-        // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
-
-        // conditionally check this is a online or offline payment
-        if (mode == 'Online') {
+       
+        if (createObj?.paymentDetails?.mode == 'Online') {
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
@@ -55,14 +51,11 @@ applicationCtrl.CreateCSR = async (req, res) => {
     const createObj = req.body;
 
     try {
-        const exist = await CSR.find({ phone });
-        const emailExist = await CSR.find({ email });
+       
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
-        // if (exist.length !== 0) return res.status(409).json({ msg: "Phone Number Already Exist" })
-        // if (emailExist.length !== 0) return res.status(409).json({ msg: "Email Already Exist" })
 
         // conditionally check this is a online or offline payment
-        if (mode == 'Online') {
+        if (createObj?.paymentDetails?.mode == 'Online') {
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
@@ -86,7 +79,7 @@ applicationCtrl.CreateSE = async (req, res) => {
 
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
-        if (mode == 'Online') {
+        if (createObj?.paymentDetails?.mode == 'Online') {
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
@@ -108,7 +101,7 @@ applicationCtrl.CreateSS = async (req, res) => {
     try {
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
-        if (mode == 'Online') {
+        if (createObj?.paymentDetails?.mode == 'Online') {
             const transactionID = generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;

@@ -14,13 +14,13 @@ const SustainabilityStartupSchema = new mongoose.Schema({
         website: { type: String },
         head: { type: String },
         
-        establishedDate: { type: Date, required: true },
+        establishedDate: { type: Date },
         foundersAndTeam: { type: String },
         location: { type: String },
         contactDetails: {
-            contactPersonName: { type: String, required: true },
-            mobileNumber: { type: String, required: true },
-            emailAddress: { type: String, required: true },
+            contactPersonName: { type: String },
+            mobileNumber: { type: String },
+            emailAddress: { type: String },
             websiteOrSocialLinks: { type: [String] },
         },
     },

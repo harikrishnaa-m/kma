@@ -17,9 +17,9 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
         corporateOfficeLocation: { type: String},
         briefDescription: { type: String, maxlength: 100},
         ownershipDetails: { type: String},
-        yearOfEstablishment: { type: Number, required: true },
-        annualTurnoverFY2023_24: { type: Number, required: true },
-        marketCapitalization: { type: Number }, 
+        yearOfEstablishment: { type: Number},
+        annualTurnoverFY2023_24: { type: String },
+        marketCapitalization: { type: String }, 
         totalEmployees: {
             fullTime: { type: Number },
             contract: { type: Number },

@@ -1,57 +1,57 @@
 const mongoose = require("mongoose");
 
 const NGOSchema = new mongoose.Schema({
-    formName: { type: String, default: "NGO", immutable:true },
+    formName: { type: String, default: "NGO", immutable: true },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
     organizationProfile: {
         name: { type: String, required: true },
         address: { type: String },
-        contactPerson: {type: String },
+        contactPerson: { type: String },
         mobile: { type: String },
         email: { type: String },
         website: { type: String },
         head: { type: String },
-        
-        description: { type: String, maxlength: 50, required: true },
-        yearOfEstablishment: { type: Number, required: true },
-        legalStatus: { type: String, enum: ['Society', 'Trust', 'Section 8 Company'], required: true },
+
+        description: { type: String},
+        yearOfEstablishment: { type: Number },
+        legalStatus: { type: String, enum: ['Society', 'Trust', 'Section 8 Company'] },
         governingBodyDetails: [
             {
-                name: { type: String, required: true },
-                role: { type: String, required: true }
+                name: { type: String },
+                role: { type: String }
             }
         ],
-        thematicAreas: [{ type: String, required: true }],
-        activeGeographies: [{ type: String, required: true }],
+        thematicAreas: [{ type: String }],
+        activeGeographies: [{ type: String }],
     },
 
     projectDetails: [
         {
-            name: { type: String, required: true },
-            keyTheme: { type: String, required: true },
-            sourceOfFunding: { type: String, required: true },
-            location: { type: String, required: true },
-            startDate: { type: Date, required: true },
-            endDate: { type: Date, required: true },
-            duration: { type: String, required: true },
+            name: { type: String },
+            keyTheme: { type: String },
+            sourceOfFunding: { type: String },
+            location: { type: String },
+            startDate: { type: Date },
+            endDate: { type: Date },
+            duration: { type: String },
             totalAmountSpent: {
-                "2020-21": { type: Number, default: 0 },
-                "2021-22": { type: Number, default: 0 },
-                "2022-23": { type: Number, default: 0 },
-                "2023-24": { type: Number, default: 0 }
+                "2020-21": { type: String },
+                "2021-22": { type: String },
+                "2022-23": { type: String },
+                "2023-24": { type: String }
             },
-            concernsAddressed: { type: String, required: true },
-            stakeholders: [{ type: String, required: true }],
-            totalBeneficiaries: { type: Number, required: true },
+            concernsAddressed: { type: String },
+            stakeholders: [{ type: String }],
+            totalBeneficiaries: { type: Number },
             innovativeMethods: { type: String },
             impact: {
                 qualitative: { type: String },
                 quantitative: { type: String }
             },
             impactAssessment: {
-                conducted: { type: Boolean, required: true },
+                conducted: { type: Boolean },
                 by: { type: String, enum: ['Internal Resources', 'Third-Party Agency'] },
                 thirdPartyAgencyName: { type: String },
                 report: {
@@ -61,8 +61,8 @@ const NGOSchema = new mongoose.Schema({
                     location: { type: String },
                 },
             },
-            sustainabilityStrategy: { type: String, required: true },
-            replicabilityProbability: { type: String, required: true }
+            sustainabilityStrategy: { type: String },
+            replicabilityProbability: { type: String }
         }
     ],
 
