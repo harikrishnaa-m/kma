@@ -15,15 +15,12 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
         head: { type: String },
         
         corporateOfficeLocation: { type: String},
-        briefDescription: { type: String, maxlength: 100},
+        briefDescription: { type: String},
         ownershipDetails: { type: String},
         yearOfEstablishment: { type: Number},
         annualTurnoverFY2023_24: { type: String },
         marketCapitalization: { type: String }, 
-        totalEmployees: {
-            fullTime: { type: Number },
-            contract: { type: Number },
-        },
+        totalEmployees:  { type: String},
     },
 
     sustainabilityGovernance: {
@@ -36,24 +33,24 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
     },
 
     sustainabilityIndicators: {
-        ghgFootprint: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
-        waterFootprint: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
-        energyFootprint: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
-        wasteManagement: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
-        employeeWellBeing: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
-        genderDiversity: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
-        inclusiveDevelopment: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
-        customerEngagement: { type: String, enum: ["Measured", "Planned to Measure", "Not Applicable"] },
+        ghgFootprint: { type: String },
+        waterFootprint: { type: String },
+        energyFootprint: { type: String },
+        wasteManagement: { type: String },
+        employeeWellBeing: { type: String },
+        genderDiversity: { type: String },
+        inclusiveDevelopment: { type: String },
+        customerEngagement: { type: String },
     },
 
     sustainabilityFrameworks: {
-        adoptedFrameworks: { type: [String] }, 
-        isoStandards: { type: [String] }, 
+        adoptedFrameworks:  { type: String}, 
+        isoStandards:  { type: String}, 
         thirdPartyAssurance: { type: String }, 
         innovativePractices: { type: String },
         awarenessInitiatives: { type: String },
-        significantAchievements: [{ type: String }], 
-        publicCommitments: [{ type: String }], 
+        significantAchievements:  { type: String}, 
+        publicCommitments:  { type: String}, 
     },
 
     attachments: {

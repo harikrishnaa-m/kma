@@ -16,15 +16,10 @@ const NGOSchema = new mongoose.Schema({
 
         description: { type: String},
         yearOfEstablishment: { type: Number },
-        legalStatus: { type: String, enum: ['Society', 'Trust', 'Section 8 Company'] },
-        governingBodyDetails: [
-            {
-                name: { type: String },
-                role: { type: String }
-            }
-        ],
-        thematicAreas: [{ type: String }],
-        activeGeographies: [{ type: String }],
+        legalStatus:  { type: String},
+        governingBodyDetails:  { type: String},
+        thematicAreas:  { type: String},
+        activeGeographies:  { type: String},
     },
 
     projectDetails: [
@@ -36,14 +31,9 @@ const NGOSchema = new mongoose.Schema({
             startDate: { type: Date },
             endDate: { type: Date },
             duration: { type: String },
-            totalAmountSpent: {
-                "2020-21": { type: String },
-                "2021-22": { type: String },
-                "2022-23": { type: String },
-                "2023-24": { type: String }
-            },
+            totalAmountSpent:  { type: String},
             concernsAddressed: { type: String },
-            stakeholders: [{ type: String }],
+            stakeholders:  { type: String},
             totalBeneficiaries: { type: Number },
             innovativeMethods: { type: String },
             impact: {

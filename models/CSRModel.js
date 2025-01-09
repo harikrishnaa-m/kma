@@ -18,14 +18,14 @@ const CSRSchema = new mongoose.Schema({
     projectDetails: {
         name: { type: String },
         awardCategory: { type: String },
-        organizationType: { type: String, enum: ["NGO", "Company", "Others"] },
+        organizationType: { type: String},
         annualCSRBudget: { type: String },
         gstNumber: { type: String },
     },
 
     csrProjectOverview: { type: String },
 
-    impactMetrics: [String],
+    impactMetrics:  { type: String},
 
     innovationAndScalability: {
         innovationDescription: { type: String },
