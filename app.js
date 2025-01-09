@@ -12,10 +12,6 @@ const bodyParser = require('body-parser')
 const ClientURL = process.env.ClientURL;
 
 ConnectDB()
-// app.use(cors({
-//     origin: ClientURL,
-//     credentials: true,
-// }));
 
 const corsOptions = {
     credentials: true,
