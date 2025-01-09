@@ -7,22 +7,14 @@ const SustainabilityStartupSchema = new mongoose.Schema({
 
     organizationProfile: {
         name: { type: String, required: true },
-        address: { type: String },
+        establishedDate: { type: Date },
+        foundersAndTeam: { type: String },
+        location: { type: String },
         contactPerson: { type: String },
         mobile: { type: String },
         email: { type: String },
         website: { type: String },
-        head: { type: String },
-
-        establishedDate: { type: Date },
-        foundersAndTeam: { type: String },
-        location: { type: String },
-        contactDetails: {
-            contactPersonName: { type: String },
-            mobileNumber: { type: String },
-            emailAddress: { type: String },
-            websiteOrSocialLinks: { type: String },
-        },
+      
     },
 
     generalOverview: {

@@ -7,13 +7,7 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
     
     organizationProfile: {
         name: { type: String, required: true },
-        address: { type: String },
-        contactPerson: {type: String },
-        mobile: { type: String },
-        email: { type: String },
-        website: { type: String },
-        head: { type: String },
-        
+       
         corporateOfficeLocation: { type: String},
         briefDescription: { type: String},
         ownershipDetails: { type: String},
