@@ -10,12 +10,33 @@ const cors = require('cors');
 const bodyParser = require('body-parser')
 
 const ClientURL = process.env.ClientURL;
+const ClientURL2 = process.env.ClientURL2;
 
 ConnectDB()
-app.use(cors({
-    origin: ClientURL,
+// app.use(cors({
+//     origin: ClientURL,
+//     credentials: true,
+// }));
+
+const corsOptions = {
     credentials: true,
-}));
+    origin: function (origin, callback) {
+        if (!origin || process.env.NODE_ENV === 'development') {
+            callback(null, true);
+
+        } else {
+            const allowedOrigins = [ClientURL, ClientURL2];
+
+            if (allowedOrigins.indexOf(origin) !== -1) {
+                callback(null, true);
+            } else {
+                callback(new Error('Origin not allowed by CORS'));
+            }
+        }
+    }
+};
+
+app.use(cors(corsOptions));
 
 app.use(CookieParser())
 // app.use(express.json())
