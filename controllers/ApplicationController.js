@@ -41,6 +41,7 @@ applicationCtrl.CreateNGO = async (req, res) => {
         }
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({ msg: "Something went wrong" });
 
     }
@@ -281,11 +282,17 @@ applicationCtrl.GetAllApplications = async (req, res) => {
 
 
 applicationCtrl.GetAllNGOs = async (req, res) => {
-
+    const page = parseInt(req.query.page) || 1;
+    const entries = parseInt(req.query.entries) || 10;
     try {
         const allNGOs = await NGO.find();
 
-        res.status(200).json(allNGOs)
+         // Applying pagination
+         const startIndex = (page - 1) * entries;
+         const endIndex = startIndex + entries;
+         const paginatedResult = allNGOs.slice(startIndex, endIndex);
+
+        res.status(200).json(paginatedResult)
 
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" })
@@ -294,11 +301,17 @@ applicationCtrl.GetAllNGOs = async (req, res) => {
 }
 
 applicationCtrl.GetAllCSRs = async (req, res) => {
-
+    const page = parseInt(req.query.page) || 1;
+    const entries = parseInt(req.query.entries) || 10;
     try {
         const allCSRs = await CSR.find();
 
-        res.status(200).json(allCSRs)
+         // Applying pagination
+         const startIndex = (page - 1) * entries;
+         const endIndex = startIndex + entries;
+         const paginatedResult = allCSRs.slice(startIndex, endIndex);
+
+        res.status(200).json(paginatedResult)
 
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" })
@@ -307,12 +320,18 @@ applicationCtrl.GetAllCSRs = async (req, res) => {
 }
 
 applicationCtrl.GetAllSEs = async (req, res) => {
-
+    const page = parseInt(req.query.page) || 1;
+    const entries = parseInt(req.query.entries) || 10;
     try {
 
         const allSEs = await SustainableEnterprise.find();
 
-        res.status(200).json(allSEs)
+         // Applying pagination
+         const startIndex = (page - 1) * entries;
+         const endIndex = startIndex + entries;
+         const paginatedResult = allSEs.slice(startIndex, endIndex);
+
+        res.status(200).json(paginatedResult)
 
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" })
@@ -321,12 +340,18 @@ applicationCtrl.GetAllSEs = async (req, res) => {
 }
 
 applicationCtrl.GetAllSSs = async (req, res) => {
-
+    const page = parseInt(req.query.page) || 1;
+    const entries = parseInt(req.query.entries) || 10;
     try {
 
         const allSSs = await SustainabilityStartup.find();
 
-        res.status(200).json(allSSs)
+         // Applying pagination
+         const startIndex = (page - 1) * entries;
+         const endIndex = startIndex + entries;
+         const paginatedResult = allSSs.slice(startIndex, endIndex);
+
+        res.status(200).json(paginatedResult)
 
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" })
