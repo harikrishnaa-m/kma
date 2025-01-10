@@ -15,8 +15,7 @@ const NGOSchema = new mongoose.Schema({
         activeGeographies:  { type: String},
     },
 
-    projectDetails: [
-        {
+    projectDetails: {
             name: { type: String },
             keyTheme: { type: String },
             sourceOfFunding: { type: String },
@@ -43,8 +42,7 @@ const NGOSchema = new mongoose.Schema({
             },
             sustainabilityStrategy: { type: String },
             replicabilityProbability: { type: String }
-        }
-    ],
+        },
 
     attachments: {
         organizationProfile: {
