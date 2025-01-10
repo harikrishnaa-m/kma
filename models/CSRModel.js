@@ -4,7 +4,7 @@ const CSRSchema = new mongoose.Schema({
     formName: { type: String, default: "CSR", immutable: true },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
-    SDGsAlignment:{type:string}
+    SDGsAlignment:{type: String}
     csrProjectOverview: { type: String },
     impactMetrics:  { type: String},
     innovationAndScalability: { type: String },
