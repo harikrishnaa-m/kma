@@ -4,6 +4,10 @@ const CSRSchema = new mongoose.Schema({
     formName: { type: String, default: "CSR", immutable: true },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
+    SDGsAlignment:{type:string}
+    csrProjectOverview: { type: String },
+    impactMetrics:  { type: String},
+    innovationAndScalability: { type: String },
 
     organizationProfile: {
         name: { type: String, required: true },
@@ -21,15 +25,6 @@ const CSRSchema = new mongoose.Schema({
         organizationType: { type: String},
         annualCSRBudget: { type: String },
         gstNumber: { type: String },
-    },
-
-    csrProjectOverview: { type: String },
-
-    impactMetrics:  { type: String},
-
-    innovationAndScalability: {
-        innovationDescription: { type: String },
-        scalabilityPotential: { type: String },
     },
 
     attachments: {
