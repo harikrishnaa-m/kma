@@ -61,7 +61,6 @@ const CSRSchema = new mongoose.Schema({
         },
     },
 
-
 }, { timestamps: true })
 
 const CSR = mongoose.model("CSR", CSRSchema);
