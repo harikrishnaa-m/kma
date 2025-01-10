@@ -11,8 +11,8 @@ router.post("/create-ss", applicationCtrl.CreateSS);
 
 router.get('/status/:txnId', applicationCtrl.checkStatus);
 
-router.use(authMiddleware)
-router.use(adminChecker)
+// router.use(authMiddleware)
+// router.use(adminChecker)
 
 router.get("/get-all", applicationCtrl.GetAllApplications);
 
