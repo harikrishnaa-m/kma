@@ -7,7 +7,6 @@ const NGOSchema = new mongoose.Schema({
 
     organizationProfile: {
         name: { type: String, required: true },
-
         description: { type: String},
         yearOfEstablishment: { type: Number },
         legalStatus:  { type: String},
@@ -30,10 +29,7 @@ const NGOSchema = new mongoose.Schema({
             stakeholders:  { type: String},
             totalBeneficiaries: { type: Number },
             innovativeMethods: { type: String },
-            impact: {
-                qualitative: { type: String },
-                quantitative: { type: String }
-            },
+            impact: { type: String },
             impactAssessment: {
                 conducted: { type: Boolean },
                 by: { type: String, enum: ['Internal Resources', 'Third-Party Agency'] },
