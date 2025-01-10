@@ -31,7 +31,6 @@ const SustainabilityStartupSchema = new mongoose.Schema({
 
     sustainabilityImpact: {
         positiveImpact: { type: String },
-        measurableResults: { type: String },
         longTermImpact: { type: String },
     },
 
