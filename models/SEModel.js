@@ -1,29 +1,30 @@
 const mongoose = require("mongoose");
 
 const SustainableEnterpriseSchema = new mongoose.Schema({
-    formName: { type: String, default: "SE", immutable:true },
+    formName: { type: String, default: "SE", immutable: true },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
-    
+
     organizationProfile: {
         name: { type: String, required: true },
-       
-        corporateOfficeLocation: { type: String},
-        briefDescription: { type: String},
-        ownershipDetails: { type: String},
-        yearOfEstablishment: { type: Number},
+
+        corporateOfficeLocation: { type: String },
+        briefDescription: { type: String },
+        ownershipDetails: { type: String },
+        yearOfEstablishment: { type: Number },
         annualTurnoverFY2023_24: { type: String },
-        marketCapitalization: { type: String }, 
-        totalEmployees:  { type: String},
+        marketCapitalization: { type: String },
+        totalEmployees: { type: String },
     },
 
     sustainabilityGovernance: {
         integrationOfResponsibleBusiness: { type: String },
-        esgTopics: { type: String }, 
+        esgTopics: { type: String },
         stakeholderEngagement: { type: String },
         seniorManagementResponsibilities: { type: String },
-        sustainabilityMeasurements: { type: String }, 
-        boardResponsibilities: { type: String }, 
+        sustainabilityMeasurements: { type: String },
+        complianceProcess: { type: String },
+        boardResponsibilities: { type: String },
     },
 
     sustainabilityIndicators: {
@@ -35,16 +36,19 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
         genderDiversity: { type: String },
         inclusiveDevelopment: { type: String },
         customerEngagement: { type: String },
+        openness: { type: String },
     },
 
     sustainabilityFrameworks: {
-        adoptedFrameworks:  { type: String}, 
-        isoStandards:  { type: String}, 
-        thirdPartyAssurance: { type: String }, 
+        adoptedFrameworks: { type: String },
+        isoStandards: { type: String },
+        officeStandards: { type: String },
+        thirdPartyAssurance: { type: String },
         innovativePractices: { type: String },
         awarenessInitiatives: { type: String },
-        significantAchievements:  { type: String}, 
-        publicCommitments:  { type: String}, 
+        collaborativeInitiatives: { type: String },
+        significantAchievements: { type: String },
+        publicCommitments: { type: String },
     },
 
     attachments: {

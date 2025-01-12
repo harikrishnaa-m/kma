@@ -14,19 +14,20 @@ const SustainabilityStartupSchema = new mongoose.Schema({
         mobile: { type: String },
         email: { type: String },
         website: { type: String },
-      
+
     },
 
     generalOverview: {
         description: { type: String },
-        sdgsAddressed: { type: String },
+        sdgsAddressed: [{ type: String }],
     },
 
     businessModel: {
         primaryProductOrService: { type: String },
         uniqueValueProposition: { type: String },
         primaryCustomersOrBeneficiaries: { type: String },
-        startupStage: { type: String, },
+        revenueModel: { type: String },
+        startupStage: { type: String },
     },
 
     sustainabilityImpact: {
@@ -37,6 +38,24 @@ const SustainabilityStartupSchema = new mongoose.Schema({
     innovation: {
         technologiesOrProcesses: { type: String },
         scalability: { type: String },
+        approach: { type: String },
+    },
+
+    marketAndFinancials: {
+        targetMarketSize: { type: String },
+        annualRevenueOrFunding: { type: String },
+        partnerships: { type: String },
+        grantsAwardsRecognitions: { type: String },
+    },
+
+    challengesAndGrowth: {
+        majorChallenges: { type: String },
+        supportNeeded: { type: String },
+    },
+
+    teamAndGovernance: {
+        teamDiversity: { type: String },
+        governanceStructure: { type: String },
     },
 
     attachments: {
