@@ -5,20 +5,8 @@ const CSRSchema = new mongoose.Schema({
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
-    // SDGsAlignment:{type: String},
-    // csrProjectOverview: { type: String },
-    // impactMetrics:  { type: String},
-    // innovationAndScalability: { type: String },
-
     organizationProfile: {
         name: { type: String, required: true },
-        // address: { type: String },
-        // contactPerson: { type: String },
-        // mobile: { type: String },
-        // email: { type: String },
-        // website: { type: String },
-        // head: { type: String },
-
 
         corporateOfficeLocation: { type: String },
         description: { type: String },
@@ -29,14 +17,6 @@ const CSRSchema = new mongoose.Schema({
         reportingSystem: { type: String },
         certifications: { type: String },
     },
-
-    // projectDetails: {
-    //     name: { type: String },
-    //     awardCategory: { type: String },
-    //     organizationType: { type: String},
-    //     annualCSRBudget: { type: String },
-    //     gstNumber: { type: String },
-    // },
 
     csrPolicyAndPractice: {
         salientFeatures: { type: String },
@@ -49,30 +29,7 @@ const CSRSchema = new mongoose.Schema({
         accolades: { type: String },
     },
 
-    csrProjectReport: {
-        communityNeedsAssessment: { type: String },
-        implementationProcess: { type: String },
-        implementationAgency: { type: String },
-        resourceAllocation: { type: String },
-        challenges: { type: String },
-        improvisations: { type: String },
-        impact: { type: String },
-        sustainabilitySteps: { type: String },
-    },
-
     attachments: {
-        // organizationProfile: {
-        //     name: { type: String },
-        //     key: { type: String },
-        //     size: { type: String },
-        //     location: { type: String },
-        // },
-        // csrPolicyAndPractice: {
-        //     name: { type: String },
-        //     key: { type: String },
-        //     size: { type: String },
-        //     location: { type: String },
-        // },
 
         csrProjectReport: {
             name: { type: String },
@@ -87,7 +44,7 @@ const CSRSchema = new mongoose.Schema({
             size: { type: String },
             location: { type: String },
         },
-        certificate: {
+        certificates: {
             name: { type: String },
             key: { type: String },
             size: { type: String },
