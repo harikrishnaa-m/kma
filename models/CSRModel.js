@@ -44,12 +44,12 @@ const CSRSchema = new mongoose.Schema({
             size: { type: String },
             location: { type: String },
         },
-        certificates: {
+        certificates: [{
             name: { type: String },
             key: { type: String },
             size: { type: String },
             location: { type: String },
-        },
+        }],
     },
 
     paymentDetails: {
