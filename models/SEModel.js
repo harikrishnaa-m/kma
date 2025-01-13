@@ -70,12 +70,12 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
             size: { type: String },
             location: { type: String },
         },
-        supportingDocuments: {
+        supportingDocuments: [{
             name: { type: String },
             key: { type: String },
             size: { type: String },
             location: { type: String },
-        },
+        }],
     },
 
     contactDetails: {
