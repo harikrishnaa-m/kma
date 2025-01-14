@@ -38,6 +38,8 @@ app.use(CookieParser())
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }))
 
+app.set("trust proxy", 1)
+
 app.use("/api/auth", authRouter);
 app.use("/api/application", applicationRouter)
 app.use("/api/uploads", uploadsRouter)

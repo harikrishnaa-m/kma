@@ -12,7 +12,7 @@ const delayForSecurity = () => new Promise(resolve => setTimeout(resolve, 500));
 
 authCtrl.loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // Limit each IP to 5 login attempts per window
+    max: 50, // Limit each IP to 50 login attempts per window
     message: { msg: "Too many login attempts. Please try again later." },
 });
 
