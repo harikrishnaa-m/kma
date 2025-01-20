@@ -14,7 +14,7 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
         yearOfEstablishment: { type: Number },
         annualTurnoverFY2023_24: { type: String },
         marketCapitalization: { type: String },
-        totalEmployees: { type: String },
+        totalEmployees: { type: Number },
     },
 
     sustainabilityGovernance: {
