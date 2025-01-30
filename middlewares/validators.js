@@ -1,7 +1,10 @@
 const { check, body, validationResult } = require('express-validator')
 
 const CSRIV = [
-
+    body("projectTheme")
+    .isIn(["Education", "Health", "Social Inclusion", "Environment"])
+    .withMessage("Invalid project theme"),
+    
     check("isKmaMember").optional({ nullable: true, checkFalsy: true }).isBoolean().withMessage("isKmaMember must be a boolean"),
 
     check("membershipId").optional({ nullable: true, checkFalsy: true }).isString().withMessage("membershipId must be a string"),
