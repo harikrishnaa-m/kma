@@ -5,6 +5,8 @@ const CSRSchema = new mongoose.Schema({
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
+    projectTheme: { type: String, enum: ["Education", "Health", "Social Inclusion", "Environment"], required: true },
+
     organizationProfile: {
         name: { type: String, required: true },
 
