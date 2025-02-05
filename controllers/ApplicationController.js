@@ -31,7 +31,7 @@ applicationCtrl.CreateNGO = async (req, res) => {
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
        
         if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = generateTransactionId();
+            const transactionID = await generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
@@ -57,7 +57,7 @@ applicationCtrl.CreateCSR = async (req, res) => {
 
         // conditionally check this is a online or offline payment
         if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = generateTransactionId();
+            const transactionID = await generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
@@ -81,7 +81,7 @@ applicationCtrl.CreateSE = async (req, res) => {
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
         if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = generateTransactionId();
+            const transactionID = await generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
@@ -103,7 +103,7 @@ applicationCtrl.CreateSS = async (req, res) => {
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
         if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = generateTransactionId();
+            const transactionID = await generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
             createObj.paymentDetails.transactionId = transactionID;
             await newPayment(req, res, createObj)
@@ -195,15 +195,15 @@ applicationCtrl.checkStatus = async (req, res) => {
         }
     };
 
+    console.log(finalObj)
+
     // CHECK PAYMENT STATUS
     axios.request(options).then(async (response) => {
-
         const email = finalObj?.email
         const transactionID = finalObj?.paymentDetails?.transactionId
         const organization = finalObj?.organization
 
         if (response.data.success === true && response?.data.code === 'PAYMENT_SUCCESS') {
-
             let createdDoc;
             if (finalObj?.formName === "NGO") {
                 createdDoc = await NGO.create(finalObj);
