@@ -10,7 +10,7 @@ router.post("/create-ngo", applicationCtrl.CreateNGO);
 router.post("/create-se", applicationCtrl.CreateSE);
 router.post("/create-ss", applicationCtrl.CreateSS);
 
-router.get('/status/:txnId', applicationCtrl.checkStatus);
+router.post('/status/:txnId', applicationCtrl.checkStatus);
 
 router.use(authMiddleware)
 router.use(adminChecker)
