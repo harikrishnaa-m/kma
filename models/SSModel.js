@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const SustainabilityStartupSchema = new mongoose.Schema({
-    formName: { type: String, default: "SS", immutable: true },
+    formName: { type: String, default: "SS" },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 

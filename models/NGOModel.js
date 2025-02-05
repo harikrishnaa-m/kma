@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const NGOSchema = new mongoose.Schema({
-    formName: { type: String, default: "NGO", immutable: true },
+    formName: { type: String, default: "NGO" },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
@@ -21,7 +21,7 @@ const NGOSchema = new mongoose.Schema({
 
         scaledExamples: { type: String },
         fundGenerations: { type: String },
-        
+
         keyTheme: { type: String },
         sourceOfFunding: { type: String },
         location: { type: String },

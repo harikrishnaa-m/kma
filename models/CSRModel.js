@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const CSRSchema = new mongoose.Schema({
-    formName: { type: String, default: "CSR", immutable: true },
+    formName: { type: String, default: "CSR" },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
