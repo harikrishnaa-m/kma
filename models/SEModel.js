@@ -5,6 +5,8 @@ const SustainableEnterpriseSchema = new mongoose.Schema({
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
+    parityMeasures: { type: String },
+
     organizationProfile: {
         name: { type: String, required: true },
 
