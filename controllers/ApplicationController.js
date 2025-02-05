@@ -135,9 +135,9 @@ const newPayment = async (req, res, obj) => {
             merchantUserId: obj.paymentDetails.muid,
             name: obj.head,
             amount: obj?.paymentDetails?.amountWithGst * 100,
-            redirectUrl: `https://server.kmaaward.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
+            redirectUrl: `${process.env.SERVER_URL}${merchantTransactionId}`,
             redirectMode: 'POST',
-            callbackUrl: `https://server.kmaaward.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
+            callbackUrl: `${process.env.SERVER_URL}${merchantTransactionId}`,
             mobileNumber: obj.phone,
             paymentInstrument: {
                 type: 'PAY_PAGE'
