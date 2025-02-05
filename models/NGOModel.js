@@ -5,9 +5,7 @@ const NGOSchema = new mongoose.Schema({
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
-    scaledExamples: { type: String },
-    fundGenerations: { type: String },
-
+    
     organizationProfile: {
         name: { type: String, required: true },
         description: { type: String },
@@ -17,9 +15,13 @@ const NGOSchema = new mongoose.Schema({
         thematicAreas: { type: String },
         activeGeographies: { type: String },
     },
-
+    
     projectDetails: [{
         name: { type: String },
+
+        scaledExamples: { type: String },
+        fundGenerations: { type: String },
+        
         keyTheme: { type: String },
         sourceOfFunding: { type: String },
         location: { type: String },
