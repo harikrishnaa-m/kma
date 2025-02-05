@@ -179,7 +179,8 @@ const newPayment = async (req, res, obj) => {
 applicationCtrl.checkStatus = async (req, res) => {
 
     const merchantTransactionId = req.params.txnId
-    console.log(merchantTransactionId, "checksum check")
+    console.log({merchantTransactionId}, "checksum check");
+    console.log({finalObj})
 
     const keyIndex = 1;
     const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
@@ -197,7 +198,7 @@ applicationCtrl.checkStatus = async (req, res) => {
         }
     };
 
-    console.log(finalObj)
+    console.log({finalObj})
 
     // CHECK PAYMENT STATUS
     axios.request(options).then(async (response) => {
@@ -226,16 +227,16 @@ applicationCtrl.checkStatus = async (req, res) => {
                 .catch((error) => console.log("Error sending email:", error));
 
             // Redirect to success page
-            const url = "https://kma.qmarkdesk.com/registration?status=success";
+            const url = "https://kma.qmarkdesk.com/success?status=success";
             return res.status(201).redirect(url);
         } else {
-            const url = "https://kma.qmarkdesk.com/registration?status=cancel"
+            const url = "https://kma.qmarkdesk.com/failure?status=cancel"
             return res.redirect(url)
         }
     })
         .catch((error) => {
             console.log(error)
-            const url = "https://kma.qmarkdesk.com/registration?status=fail"
+            const url = "https://kma.qmarkdesk.com/failure?status=fail"
             return res.redirect(url)
         });
 };
