@@ -227,16 +227,16 @@ applicationCtrl.checkStatus = async (req, res) => {
                 .catch((error) => console.log("Error sending email:", error));
 
             // Redirect to success page
-            const url = "https://kma.qmarkdesk.com/success?status=success";
+            const url = "https://kma.qmarkdesk.com/success";
             return res.status(201).redirect(url);
         } else {
-            const url = "https://kma.qmarkdesk.com/failure?status=cancel"
+            const url = "https://kma.qmarkdesk.com/failure"
             return res.redirect(url)
         }
     })
         .catch((error) => {
             console.log(error)
-            const url = "https://kma.qmarkdesk.com/failure?status=fail"
+            const url = "https://kma.qmarkdesk.com/failure"
             return res.redirect(url)
         });
 };
