@@ -135,9 +135,9 @@ const newPayment = async (req, res, obj) => {
             merchantUserId: obj.paymentDetails.muid,
             name: obj.head,
             amount: obj?.paymentDetails?.amountWithGst * 100,
-            redirectUrl: `${process.env.SERVER_URL}${merchantTransactionId}`,
+            redirectUrl: `${process.env.SERVER_URL}/api/application/status/${merchantTransactionId}`,
             redirectMode: 'POST',
-            callbackUrl: `${process.env.SERVER_URL}${merchantTransactionId}`,
+            callbackUrl: `${process.env.SERVER_URL}/api/application/status/${merchantTransactionId}`,
             mobileNumber: obj.phone,
             paymentInstrument: {
                 type: 'PAY_PAGE'
