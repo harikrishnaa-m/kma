@@ -27,9 +27,9 @@ applicationCtrl.CreateNGO = async (req, res) => {
     const createObj = req.body;
 
     try {
-      
+
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
-       
+
         if (createObj?.paymentDetails?.mode == 'Online') {
             const transactionID = await generateTransactionId();
             createObj.paymentDetails.muid = "MUID" + Date.now();
@@ -52,7 +52,7 @@ applicationCtrl.CreateCSR = async (req, res) => {
     const createObj = req.body;
 
     try {
-       
+
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
         // conditionally check this is a online or offline payment
@@ -179,8 +179,28 @@ const newPayment = async (req, res, obj) => {
 applicationCtrl.checkStatus = async (req, res) => {
 
     const merchantTransactionId = req.params.txnId
-    console.log({merchantTransactionId}, "checksum check");
-    console.log({finalObj})
+    console.log({ merchantTransactionId }, "checksum check");
+    console.log({ finalObj })
+
+    let existingTxnId;
+
+    if (finalObj?.formName === "NGO") {
+        existingTxnId = await NGO.findOne({ "paymentDetails.transactionId": merchantTransactionId });
+    }
+    else if (finalObj?.formName === "CSR") {
+        existingTxnId = await CSR.findOne({ "paymentDetails.transactionId": merchantTransactionId });
+    }
+    else if (finalObj?.formName === "SE") {
+        existingTxnId = await SustainableEnterprise.findOne({ "paymentDetails.transactionId": merchantTransactionId });
+    }
+    else if (finalObj?.formName === "SS") {
+        existingTxnId = await SustainabilityStartup.findOne({ "paymentDetails.transactionId": merchantTransactionId });
+    }
+
+    if (existingTxnId) {
+        const url = "https://www.kma.qmarkdesk.com/success";
+        return res.status(201).redirect(url);
+    }
 
     const keyIndex = 1;
     const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
@@ -198,13 +218,13 @@ applicationCtrl.checkStatus = async (req, res) => {
         }
     };
 
-    console.log({finalObj})
+    console.log({ finalObj })
 
     // CHECK PAYMENT STATUS
     axios.request(options).then(async (response) => {
-        const email = finalObj?.email
-        const transactionID = finalObj?.paymentDetails?.transactionId
-        const organization = finalObj?.organization
+        // const email = finalObj?.email
+        // const transactionID = finalObj?.paymentDetails?.transactionId
+        // const organization = finalObj?.organization
 
         if (response.data.success === true && response?.data.code === 'PAYMENT_SUCCESS') {
             let createdDoc;
@@ -223,20 +243,20 @@ applicationCtrl.checkStatus = async (req, res) => {
 
             console.log({ createdDoc })
             // After successful payment and database operation, generate and send the email
-            await generateMail(email, organization, transactionID).then(() => console.log("Email sent successfully"))
-                .catch((error) => console.log("Error sending email:", error));
+            // await generateMail(email, organization, transactionID).then(() => console.log("Email sent successfully"))
+            //     .catch((error) => console.log("Error sending email:", error));
 
             // Redirect to success page
-            const url = "https://kma.qmarkdesk.com/success";
+            const url = "https://www.kma.qmarkdesk.com/success";
             return res.status(201).redirect(url);
         } else {
-            const url = "https://kma.qmarkdesk.com/failure"
+            const url = "https://www.kma.qmarkdesk.com/failure"
             return res.redirect(url)
         }
     })
         .catch((error) => {
             console.log(error)
-            const url = "https://kma.qmarkdesk.com/failure"
+            const url = "https://www.kma.qmarkdesk.com/failure"
             return res.redirect(url)
         });
 };
@@ -252,9 +272,9 @@ applicationCtrl.GetAllApplications = async (req, res) => {
         if (searchQuery) {
             query = {
                 $or: [
-                    { "organizationProfile.name" : { $regex: searchQuery, $options: 'i' } },
-                    { "organizationProfile.head" : { $regex: searchQuery, $options: 'i' } },
-                    { "organizationProfile.email" : { $regex: searchQuery, $options: 'i' } },
+                    { "organizationProfile.name": { $regex: searchQuery, $options: 'i' } },
+                    { "organizationProfile.head": { $regex: searchQuery, $options: 'i' } },
+                    { "organizationProfile.email": { $regex: searchQuery, $options: 'i' } },
                 ]
             };
         }
@@ -290,10 +310,10 @@ applicationCtrl.GetAllNGOs = async (req, res) => {
     try {
         const allNGOs = await NGO.find();
 
-         // Applying pagination
-         const startIndex = (page - 1) * entries;
-         const endIndex = startIndex + entries;
-         const paginatedResult = allNGOs.slice(startIndex, endIndex);
+        // Applying pagination
+        const startIndex = (page - 1) * entries;
+        const endIndex = startIndex + entries;
+        const paginatedResult = allNGOs.slice(startIndex, endIndex);
 
         res.status(200).json(paginatedResult)
 
@@ -309,10 +329,10 @@ applicationCtrl.GetAllCSRs = async (req, res) => {
     try {
         const allCSRs = await CSR.find();
 
-         // Applying pagination
-         const startIndex = (page - 1) * entries;
-         const endIndex = startIndex + entries;
-         const paginatedResult = allCSRs.slice(startIndex, endIndex);
+        // Applying pagination
+        const startIndex = (page - 1) * entries;
+        const endIndex = startIndex + entries;
+        const paginatedResult = allCSRs.slice(startIndex, endIndex);
 
         res.status(200).json(paginatedResult)
 
@@ -329,10 +349,10 @@ applicationCtrl.GetAllSEs = async (req, res) => {
 
         const allSEs = await SustainableEnterprise.find();
 
-         // Applying pagination
-         const startIndex = (page - 1) * entries;
-         const endIndex = startIndex + entries;
-         const paginatedResult = allSEs.slice(startIndex, endIndex);
+        // Applying pagination
+        const startIndex = (page - 1) * entries;
+        const endIndex = startIndex + entries;
+        const paginatedResult = allSEs.slice(startIndex, endIndex);
 
         res.status(200).json(paginatedResult)
 
@@ -349,10 +369,10 @@ applicationCtrl.GetAllSSs = async (req, res) => {
 
         const allSSs = await SustainabilityStartup.find();
 
-         // Applying pagination
-         const startIndex = (page - 1) * entries;
-         const endIndex = startIndex + entries;
-         const paginatedResult = allSSs.slice(startIndex, endIndex);
+        // Applying pagination
+        const startIndex = (page - 1) * entries;
+        const endIndex = startIndex + entries;
+        const paginatedResult = allSSs.slice(startIndex, endIndex);
 
         res.status(200).json(paginatedResult)
 
