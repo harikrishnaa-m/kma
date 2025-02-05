@@ -178,6 +178,7 @@ const newPayment = async (req, res, obj) => {
 applicationCtrl.checkStatus = async (req, res) => {
 
     const merchantTransactionId = req.params.txnId
+    console.log(merchantTransactionId, "checksum check")
 
     const keyIndex = 1;
     const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
