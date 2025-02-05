@@ -136,7 +136,7 @@ const newPayment = async (req, res, obj) => {
             name: obj.head,
             amount: obj?.paymentDetails?.amountWithGst * 100,
             redirectUrl: `https://server.kmaaward.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
-            redirectMode: 'POT',
+            redirectMode: 'POST',
             callbackUrl: `https://server.kmaaward.qmarkdesk.com/api/application/status/${merchantTransactionId}`,
             mobileNumber: obj.phone,
             paymentInstrument: {
