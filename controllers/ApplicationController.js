@@ -13,12 +13,8 @@ const applicationCtrl = {};
 
 // ID Generate
 function generateTransactionId() {
-    // Generate a random UUIz
     const uuid = uuidv4();
-    const shortUuid = uuid.substring(0, 8);
-    const shortUuidUpperCase = shortUuid.toUpperCase();
-    const transactionId = `T-${shortUuidUpperCase}`;
-    return transactionId;
+    return `T-${uuid.substring(0, 8).toUpperCase()}`;
 }
 
 // Create NGO Application;
@@ -30,20 +26,25 @@ applicationCtrl.CreateNGO = async (req, res) => {
 
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
-        if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = await generateTransactionId();
+        if (createObj?.paymentDetails?.mode === 'Online') {
             createObj.paymentDetails.muid = "MUID" + Date.now();
-            createObj.paymentDetails.transactionId = transactionID;
-            await newPayment(req, res, createObj)
+            createObj.paymentDetails.transactionId = generateTransactionId();
+
+            const newNGOAppln = await NGO.create(createObj);
+            if (!newNGOAppln) {
+                return res.status(500).json({ msg: "Failed to register application" });
+            }
+
+            await newPayment(req, res, newNGOAppln)
+            return
         } else {
             const newNGOAppln = await NGO.create(createObj);
-            res.status(200).json(newNGOAppln);
+            return res.status(200).json(newNGOAppln);
         }
 
     } catch (error) {
         console.log(error)
         res.status(500).json({ msg: "Something went wrong" });
-
     }
 }
 
@@ -56,14 +57,19 @@ applicationCtrl.CreateCSR = async (req, res) => {
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
         // conditionally check this is a online or offline payment
-        if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = await generateTransactionId();
+        if (createObj?.paymentDetails?.mode === 'Online') {
             createObj.paymentDetails.muid = "MUID" + Date.now();
-            createObj.paymentDetails.transactionId = transactionID;
-            await newPayment(req, res, createObj)
+            createObj.paymentDetails.transactionId = generateTransactionId();
+
+            const newCSRAppln = await CSR.create(createObj);
+            if (!newCSRAppln) {
+                return res.status(500).json({ msg: "Failed to register application" });
+            }
+            await newPayment(req, res, newCSRAppln)
+            return
         } else {
             const newCSRAppln = await CSR.create(createObj);
-            res.status(200).json(newCSRAppln);
+            return res.status(200).json(newCSRAppln);
         }
 
     } catch (error) {
@@ -80,14 +86,19 @@ applicationCtrl.CreateSE = async (req, res) => {
 
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
-        if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = await generateTransactionId();
+        if (createObj?.paymentDetails?.mode === 'Online') {
             createObj.paymentDetails.muid = "MUID" + Date.now();
-            createObj.paymentDetails.transactionId = transactionID;
-            await newPayment(req, res, createObj)
+            createObj.paymentDetails.transactionId = generateTransactionId();
+
+            const newSEAppln = await SustainableEnterprise.create(createObj);
+            if (!newSEAppln) {
+                return res.status(500).json({ msg: "Failed to register application" });
+            }
+            await newPayment(req, res, newSEAppln)
+            return
         } else {
             const newSEAppln = await SustainableEnterprise.create(createObj);
-            res.status(200).json(newSEAppln);
+            return res.status(200).json(newSEAppln);
         }
 
     } catch (error) {
@@ -102,14 +113,19 @@ applicationCtrl.CreateSS = async (req, res) => {
     try {
         if (!createObj?.organizationProfile?.name?.trim()) return res.status(400).json({ msg: "Bad Request" })
 
-        if (createObj?.paymentDetails?.mode == 'Online') {
-            const transactionID = await generateTransactionId();
+        if (createObj?.paymentDetails?.mode === 'Online') {
             createObj.paymentDetails.muid = "MUID" + Date.now();
-            createObj.paymentDetails.transactionId = transactionID;
-            await newPayment(req, res, createObj)
+            createObj.paymentDetails.transactionId = generateTransactionId();
+
+            const newSSAppln = await SustainabilityStartup.create(createObj);
+            if (!newSSAppln) {
+                return res.status(500).json({ msg: "Failed to register application" });
+            }
+            await newPayment(req, res, newSSAppln)
+            return
         } else {
             const newSSAppln = await SustainabilityStartup.create(createObj);
-            res.status(200).json(newSSAppln);
+            return res.status(200).json(newSSAppln);
         }
 
     } catch (error) {
@@ -121,11 +137,8 @@ applicationCtrl.CreateSS = async (req, res) => {
 
 
 // Payment integration
-let finalObj;
 const newPayment = async (req, res, obj) => {
-    finalObj = obj
 
-    console.log("hi iam hit here")
     console.log(obj)
     try {
         const merchantTransactionId = obj.paymentDetails.transactionId;
@@ -133,12 +146,10 @@ const newPayment = async (req, res, obj) => {
             merchantId: process.env.MERCHANT_ID,
             merchantTransactionId: merchantTransactionId,
             merchantUserId: obj.paymentDetails.muid,
-            name: obj.head,
             amount: obj?.paymentDetails?.amountWithGst * 100,
             redirectUrl: `${process.env.SERVER_URL}/api/application/status/${merchantTransactionId}`,
             redirectMode: 'POST',
             callbackUrl: `${process.env.SERVER_URL}/api/application/status/${merchantTransactionId}`,
-            mobileNumber: obj.phone,
             paymentInstrument: {
                 type: 'PAY_PAGE'
             }
@@ -164,101 +175,67 @@ const newPayment = async (req, res, obj) => {
             }
         };
 
-        axios.request(options).then(function (response) {
-            return res.status(201).json(response.data.data.instrumentResponse);
-        })
-            .catch(function (error) {
-                console.error(error);
-            });
-
+        const response = await axios.request(options);
+        return res.status(201).json(response.data.data.instrumentResponse);
     } catch (error) {
         console.log(error)
+        res.status(500).json({ msg: "Payment processing error" });
     }
 }
 
 applicationCtrl.checkStatus = async (req, res) => {
-
-    const merchantTransactionId = req.params.txnId
+    const merchantTransactionId = req.params.txnId;
     console.log({ merchantTransactionId }, "checksum check");
-    console.log({ finalObj })
 
-    let existingTxnId;
+    try {
+        let docWithExistingTxnId = await NGO.findOne({ "paymentDetails.transactionId": merchantTransactionId }).lean() ||
+            await CSR.findOne({ "paymentDetails.transactionId": merchantTransactionId }).lean() ||
+            await SustainableEnterprise.findOne({ "paymentDetails.transactionId": merchantTransactionId }).lean() ||
+            await SustainabilityStartup.findOne({ "paymentDetails.transactionId": merchantTransactionId }).lean();
 
-    if (finalObj?.formName === "NGO") {
-        existingTxnId = await NGO.findOne({ "paymentDetails.transactionId": merchantTransactionId });
-    }
-    else if (finalObj?.formName === "CSR") {
-        existingTxnId = await CSR.findOne({ "paymentDetails.transactionId": merchantTransactionId });
-    }
-    else if (finalObj?.formName === "SE") {
-        existingTxnId = await SustainableEnterprise.findOne({ "paymentDetails.transactionId": merchantTransactionId });
-    }
-    else if (finalObj?.formName === "SS") {
-        existingTxnId = await SustainabilityStartup.findOne({ "paymentDetails.transactionId": merchantTransactionId });
-    }
-
-    if (existingTxnId) {
-        const url = "https://www.kma.qmarkdesk.com/success";
-        return res.status(201).redirect(url);
-    }
-
-    const keyIndex = 1;
-    const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
-    const sha256 = crypto.createHash('sha256').update(string).digest('hex');
-    const checksum = sha256 + "###" + keyIndex;
-
-    const options = {
-        method: 'GET',
-        url: `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
-        headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json',
-            'X-VERIFY': checksum,
-            'X-MERCHANT-ID': `${process.env.MERCHANT_ID}`
+        if (docWithExistingTxnId) {
+            return res.redirect("https://www.kma.qmarkdesk.com/success");
         }
-    };
 
-    console.log({ finalObj })
+        const keyIndex = 1;
+        const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
+        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
+        const checksum = sha256 + "###" + keyIndex;
 
-    // CHECK PAYMENT STATUS
-    axios.request(options).then(async (response) => {
-        // const email = finalObj?.email
-        // const transactionID = finalObj?.paymentDetails?.transactionId
-        // const organization = finalObj?.organization
+        const options = {
+            method: 'GET',
+            url: `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-VERIFY': checksum,
+                'X-MERCHANT-ID': process.env.MERCHANT_ID
+            }
+        };
+
+        const response = await axios.request(options); // Fix: Await axios request
 
         if (response.data.success === true && response?.data.code === 'PAYMENT_SUCCESS') {
-            let createdDoc;
-            if (finalObj?.formName === "NGO") {
-                createdDoc = await NGO.create(finalObj);
-            }
-            else if (finalObj?.formName === "CSR") {
-                createdDoc = await CSR.create(finalObj);
-            }
-            else if (finalObj?.formName === "SE") {
-                createdDoc = await SustainableEnterprise.create(finalObj);
-            }
-            else if (finalObj?.formName === "SS") {
-                createdDoc = await SustainabilityStartup.create(finalObj);
+            const updateData = { $set: { 'paymentDetails.status': 'completed' } };
+
+            if (docWithExistingTxnId?.formName === "NGO") {
+                await NGO.findByIdAndUpdate(docWithExistingTxnId._id, updateData, { new: true });
+            } else if (docWithExistingTxnId?.formName === "CSR") {
+                await CSR.findByIdAndUpdate(docWithExistingTxnId._id, updateData, { new: true });
+            } else if (docWithExistingTxnId?.formName === "SE") {
+                await SustainableEnterprise.findByIdAndUpdate(docWithExistingTxnId._id, updateData, { new: true });
+            } else if (docWithExistingTxnId?.formName === "SS") {
+                await SustainabilityStartup.findByIdAndUpdate(docWithExistingTxnId._id, updateData, { new: true });
             }
 
-            console.log({ createdDoc })
-            // After successful payment and database operation, generate and send the email
-            // await generateMail(email, organization, transactionID).then(() => console.log("Email sent successfully"))
-            //     .catch((error) => console.log("Error sending email:", error));
-
-            // Redirect to success page
-            const url = "https://www.kma.qmarkdesk.com/success";
-            return res.status(201).redirect(url);
+            return res.redirect("https://www.kma.qmarkdesk.com/success");
         } else {
-            const url = "https://www.kma.qmarkdesk.com/failure"
-            return res.redirect(url)
+            return res.redirect("https://www.kma.qmarkdesk.com/failure");
         }
-    })
-        .catch((error) => {
-            console.log(error)
-            const url = "https://www.kma.qmarkdesk.com/failure"
-            return res.redirect(url)
-        });
+    } catch (error) {
+        console.error(error);
+        return res.redirect("https://www.kma.qmarkdesk.com/failure");
+    }
 };
 
 
@@ -268,7 +245,7 @@ applicationCtrl.GetAllApplications = async (req, res) => {
     const searchQuery = req.query.search;
 
     try {
-        let query = {};
+        let query = {'paymentDetails.status': 'completed'};
         if (searchQuery) {
             query = {
                 $or: [
@@ -308,7 +285,7 @@ applicationCtrl.GetAllNGOs = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const entries = parseInt(req.query.entries) || 10;
     try {
-        const allNGOs = await NGO.find();
+        const allNGOs = await NGO.find({'paymentDetails.status': 'completed'});
 
         // Applying pagination
         const startIndex = (page - 1) * entries;
@@ -327,7 +304,7 @@ applicationCtrl.GetAllCSRs = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const entries = parseInt(req.query.entries) || 10;
     try {
-        const allCSRs = await CSR.find();
+        const allCSRs = await CSR.find({'paymentDetails.status': 'completed'});
 
         // Applying pagination
         const startIndex = (page - 1) * entries;
@@ -347,7 +324,7 @@ applicationCtrl.GetAllSEs = async (req, res) => {
     const entries = parseInt(req.query.entries) || 10;
     try {
 
-        const allSEs = await SustainableEnterprise.find();
+        const allSEs = await SustainableEnterprise.find({'paymentDetails.status': 'completed'});
 
         // Applying pagination
         const startIndex = (page - 1) * entries;
@@ -367,7 +344,7 @@ applicationCtrl.GetAllSSs = async (req, res) => {
     const entries = parseInt(req.query.entries) || 10;
     try {
 
-        const allSSs = await SustainabilityStartup.find();
+        const allSSs = await SustainabilityStartup.find({'paymentDetails.status': 'completed'});
 
         // Applying pagination
         const startIndex = (page - 1) * entries;

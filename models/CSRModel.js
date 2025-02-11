@@ -67,6 +67,7 @@ const CSRSchema = new mongoose.Schema({
             key: { type: String },
             location: { type: String },
         },
+        status: { type: String, default: 'pending' }
     },
 
 }, { timestamps: true })
