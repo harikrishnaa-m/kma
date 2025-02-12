@@ -38,6 +38,7 @@ applicationCtrl.CreateNGO = async (req, res) => {
             await newPayment(req, res, newNGOAppln)
             return
         } else {
+            createObj.paymentDetails.status = 'completed'
             const newNGOAppln = await NGO.create(createObj);
             return res.status(200).json(newNGOAppln);
         }
@@ -68,6 +69,7 @@ applicationCtrl.CreateCSR = async (req, res) => {
             await newPayment(req, res, newCSRAppln)
             return
         } else {
+            createObj.paymentDetails.status = 'completed'
             const newCSRAppln = await CSR.create(createObj);
             return res.status(200).json(newCSRAppln);
         }
@@ -97,6 +99,7 @@ applicationCtrl.CreateSE = async (req, res) => {
             await newPayment(req, res, newSEAppln)
             return
         } else {
+            createObj.paymentDetails.status = 'completed'
             const newSEAppln = await SustainableEnterprise.create(createObj);
             return res.status(200).json(newSEAppln);
         }
@@ -124,6 +127,7 @@ applicationCtrl.CreateSS = async (req, res) => {
             await newPayment(req, res, newSSAppln)
             return
         } else {
+            createObj.paymentDetails.status = 'completed'
             const newSSAppln = await SustainabilityStartup.create(createObj);
             return res.status(200).json(newSSAppln);
         }
