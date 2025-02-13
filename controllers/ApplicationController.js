@@ -8,6 +8,7 @@ const axios = require('axios');
 const generateMail = require('../utils/NodeMailer.js');
 const SustainableEnterprise = require("../models/SEModel.js");
 const SustainabilityStartup = require("../models/SSModel.js");
+const cron = require("node-cron");
 
 const applicationCtrl = {};
 
@@ -249,7 +250,7 @@ applicationCtrl.GetAllApplications = async (req, res) => {
     const searchQuery = req.query.search;
 
     try {
-        let query = {'paymentDetails.status': 'completed'};
+        let query = { 'paymentDetails.status': 'completed' };
         if (searchQuery) {
             query = {
                 $or: [
@@ -289,7 +290,7 @@ applicationCtrl.GetAllNGOs = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const entries = parseInt(req.query.entries) || 10;
     try {
-        const allNGOs = await NGO.find({'paymentDetails.status': 'completed'});
+        const allNGOs = await NGO.find({ 'paymentDetails.status': 'completed' });
 
         // Applying pagination
         const startIndex = (page - 1) * entries;
@@ -308,7 +309,7 @@ applicationCtrl.GetAllCSRs = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const entries = parseInt(req.query.entries) || 10;
     try {
-        const allCSRs = await CSR.find({'paymentDetails.status': 'completed'});
+        const allCSRs = await CSR.find({ 'paymentDetails.status': 'completed' });
 
         // Applying pagination
         const startIndex = (page - 1) * entries;
@@ -328,7 +329,7 @@ applicationCtrl.GetAllSEs = async (req, res) => {
     const entries = parseInt(req.query.entries) || 10;
     try {
 
-        const allSEs = await SustainableEnterprise.find({'paymentDetails.status': 'completed'});
+        const allSEs = await SustainableEnterprise.find({ 'paymentDetails.status': 'completed' });
 
         // Applying pagination
         const startIndex = (page - 1) * entries;
@@ -348,7 +349,7 @@ applicationCtrl.GetAllSSs = async (req, res) => {
     const entries = parseInt(req.query.entries) || 10;
     try {
 
-        const allSSs = await SustainabilityStartup.find({'paymentDetails.status': 'completed'});
+        const allSSs = await SustainabilityStartup.find({ 'paymentDetails.status': 'completed' });
 
         // Applying pagination
         const startIndex = (page - 1) * entries;
@@ -397,5 +398,59 @@ applicationCtrl.GetSingle = async (req, res) => {
 
     }
 }
+
+
+async function checkPendingPayments() {
+    const pendingPayments = await Promise.all([
+        NGO.find({ "paymentDetails.status": "pending" }),
+        CSR.find({ "paymentDetails.status": "pending" }),
+        SustainableEnterprise.find({ "paymentDetails.status": "pending" }),
+        SustainabilityStartup.find({ "paymentDetails.status": "pending" })
+    ])
+
+    const allPendingPayments = pendingPayments.flat();
+
+    for (const payment of allPendingPayments) {
+        const merchantTransactionId = payment.paymentDetails.transactionId;
+
+        if (!merchantTransactionId?.trim()) {
+            console.log("No merchantTransactionId")
+            continue
+        }
+
+        const keyIndex = 1;
+        const string = `/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}` + process.env.SALT_KEY;
+        const sha256 = crypto.createHash("sha256").update(string).digest("hex");
+        const checksum = sha256 + "###" + keyIndex;
+
+        const options = {
+            method: "GET",
+            url: `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
+            headers: {
+                accept: "application/json",
+                "Content-Type": "application/json",
+                "X-VERIFY": checksum,
+                "X-MERCHANT-ID": process.env.MERCHANT_ID,
+            },
+        };
+
+        try {
+            const response = await axios.request(options);
+            if (response.data.success === true && response?.data.code === "PAYMENT_SUCCESS") {
+                await payment.updateOne({ $set: { "paymentDetails.status": "completed" } });
+                console.log(`Payment status updated for ${merchantTransactionId}`);
+            }
+        } catch (error) {
+            console.error(`Failed to check payment status for ${merchantTransactionId}:`, error);
+        }
+    }
+}
+
+
+cron.schedule("*/2 * * * *", () => {
+    console.log("Running scheduled payment check...");
+    checkPendingPayments();
+});
+
 
 module.exports = applicationCtrl;

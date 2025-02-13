@@ -7,7 +7,8 @@ const authRouter = require("./routes/AuthRoutes")
 const applicationRouter = require("./routes/ApplicationRoutes");
 const uploadsRouter = require("./routes/uploads");
 const cors = require('cors');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const logger = require("./utils/logger");
 
 const ClientURL = process.env.ClientURL;
 
@@ -39,6 +40,24 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }))
 
 app.set("trust proxy", 1)
+
+const logRequests = (req, res, next) => {
+    logger.info({
+        // timestamp: new Date().toISOString(),
+        // method: req.method,
+        // url: req.originalUrl,
+        body: req.body,
+        headers: req.headers
+    });
+    next();
+};
+
+app.use([
+    '/api/application/create-csr',
+    '/api/application/create-ngo',
+    '/api/application/create-se',
+    '/api/application/create-ss',
+], logRequests);
 
 app.use("/api/auth", authRouter);
 app.use("/api/application", applicationRouter)
