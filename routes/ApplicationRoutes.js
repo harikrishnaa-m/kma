@@ -23,6 +23,8 @@ router.get("/ngo-get-all", applicationCtrl.GetAllNGOs);
 router.get("/csr-get-all", applicationCtrl.GetAllCSRs);
 router.get("/se-get-all", applicationCtrl.GetAllSEs);
 router.get("/ss-get-all", applicationCtrl.GetAllSSs);
+router.get("/si-get-all", applicationCtrl.GetAllSIs);
+router.get("/gcc-get-all", applicationCtrl.GetAllGCCs);
 
 router.get("/get-single/:id", applicationCtrl.GetSingle);
 

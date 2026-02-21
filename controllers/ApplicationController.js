@@ -678,4 +678,40 @@ cron.schedule("*/2 * * * *", () => {
   checkPendingPayments();
 });
 
+// Get all SI applications
+applicationCtrl.GetAllSIs = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const entries = parseInt(req.query.entries) || 10;
+  try {
+    const SustainabilityInnovation = require("../models/SIModel");
+    const allSIs = await SustainabilityInnovation.find({
+      "paymentDetails.status": "completed",
+    });
+    const startIndex = (page - 1) * entries;
+    const endIndex = startIndex + entries;
+    const paginatedResult = allSIs.slice(startIndex, endIndex);
+    res.status(200).json(paginatedResult);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Something went wrong" });
+  }
+};
+
+// Get all GCC applications
+applicationCtrl.GetAllGCCs = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const entries = parseInt(req.query.entries) || 10;
+  try {
+    const GCC = require("../models/GCCModel");
+    const allGCCs = await GCC.find({ "paymentDetails.status": "completed" });
+    const startIndex = (page - 1) * entries;
+    const endIndex = startIndex + entries;
+    const paginatedResult = allGCCs.slice(startIndex, endIndex);
+    res.status(200).json(paginatedResult);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Something went wrong" });
+  }
+};
+
 module.exports = applicationCtrl;
