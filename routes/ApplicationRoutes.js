@@ -9,11 +9,13 @@ router.post("/create-csr", applicationCtrl.CreateCSR);
 router.post("/create-ngo", applicationCtrl.CreateNGO);
 router.post("/create-se", applicationCtrl.CreateSE);
 router.post("/create-ss", applicationCtrl.CreateSS);
+router.post("/create-si", applicationCtrl.CreateSI);
+router.post("/create-gcc", applicationCtrl.CreateGCC);
 
-router.post('/status/:txnId', applicationCtrl.checkStatus);
+router.post("/status/:txnId", applicationCtrl.checkStatus);
 
-router.use(authMiddleware)
-router.use(adminChecker)
+router.use(authMiddleware);
+router.use(adminChecker);
 
 router.get("/get-all", applicationCtrl.GetAllApplications);
 
