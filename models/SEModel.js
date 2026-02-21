@@ -1,110 +1,93 @@
 const mongoose = require("mongoose");
 
-const SustainableEnterpriseSchema = new mongoose.Schema({
+const AttachmentSchema = new mongoose.Schema(
+  {
+    name: { type: String },
+    key: { type: String },
+    size: { type: String },
+    location: { type: String },
+  },
+  { _id: false },
+);
+
+const SustainableEnterpriseSchema = new mongoose.Schema(
+  {
     formName: { type: String, default: "SE" },
+    enterpriseSize: { type: String },
     isKmaMember: { type: Boolean, default: false },
     membershipId: { type: String },
 
-    parityMeasures: { type: String },
-
     organizationProfile: {
-        name: { type: String, required: true },
-
-        corporateOfficeLocation: { type: String },
-        briefDescription: { type: String },
-        ownershipDetails: { type: String },
-        yearOfEstablishment: { type: Number },
-        annualTurnoverFY2023_24: { type: String },
-        marketCapitalization: { type: String },
-        totalEmployees: { type: Number },
-    },
-
-    sustainabilityGovernance: {
-        integrationOfResponsibleBusiness: { type: String },
-        esgTopics: { type: String },
-        stakeholderEngagement: { type: String },
-        seniorManagementResponsibilities: { type: String },
-        sustainabilityMeasurements: { type: String },
-        complianceProcess: { type: String },
-        boardResponsibilities: { type: String },
-    },
-
-    sustainabilityIndicators: {
-        ghgFootprint: { type: String },
-        waterFootprint: { type: String },
-        energyFootprint: { type: String },
-        wasteManagement: { type: String },
-        employeeWellBeing: { type: String },
-        genderDiversity: { type: String },
-        inclusiveDevelopment: { type: String },
-        customerEngagement: { type: String },
-        openness: { type: String },
-    },
-
-    sustainabilityFrameworks: {
-        adoptedFrameworks: { type: String },
-        isoStandards: { type: String },
-        officeStandards: { type: String },
-        thirdPartyAssurance: { type: String },
-        innovativePractices: { type: String },
-        awarenessInitiatives: { type: String },
-        collaborativeInitiatives: { type: String },
-        significantAchievements: { type: String },
-        publicCommitments: { type: String },
-    },
-
-    attachments: {
-        organizationProfile: {
-            name: { type: String },
-            key: { type: String },
-            size: { type: String },
-            location: { type: String },
-        },
-        sustainabilityReports: {
-            name: { type: String },
-            key: { type: String },
-            size: { type: String },
-            location: { type: String },
-        },
-        thirdPartyAssuranceReport: {
-            name: { type: String },
-            key: { type: String },
-            size: { type: String },
-            location: { type: String },
-        },
-        supportingDocuments: [{
-            name: { type: String },
-            key: { type: String },
-            size: { type: String },
-            location: { type: String },
-        }],
+      name: { type: String },
+      corporateOfficeLocation: { type: String },
+      yearOfEstablishment: { type: Number },
+      annualTurnoverFY2023_24: { type: String },
+      marketCapitalization: { type: String },
+      ownershipDetails: { type: String },
+      briefDescription: { type: String },
+      q1: { type: String },
+      q2: { type: String },
+      q3: { type: String },
+      q4: { type: String },
+      q5: { type: String },
+      q6: { type: String },
+      q7: { type: String },
+      q8: { type: String },
+      q9: { type: String },
+      q10: { type: String },
+      q11: { type: String },
+      q12: { type: String },
+      q13: { type: String },
+      q14: { type: String },
+      q15: { type: String },
+      q16: { type: String },
+      q17: { type: String },
+      q18: { type: String },
+      q19: { type: String },
+      q20: { type: String },
+      q21: { type: String },
+      q22: { type: String },
+      q23: { type: String },
+      q24: { type: String },
+      q25: { type: String },
+      q26: { type: String },
+      q27: { type: String },
+      q28: { type: String },
+      q29: { type: String },
+      q30: { type: String },
+      q31: { type: String },
+      q32: { type: String },
     },
 
     contactDetails: {
-        organizationName: { type: String },
-        address: { type: String },
-        contactPerson: { type: String },
-        mobileNumber: { type: String },
-        emailAddress: { type: String },
-        website: { type: String },
+      organizationName: { type: String },
+      address: { type: String },
+      contactPerson: { type: String },
+      mobileNumber: { type: String },
+      emailAddress: { type: String },
+      website: { type: String },
+    },
+
+    attachments: {
+      organizationProfile: AttachmentSchema,
     },
 
     paymentDetails: {
-        mode: { type: String },
-        amount: { type: Number },
-        amountWithGst: { type: Number },
-        transactionId: { type: String },
-        muid: { type: String },
-        receipt: {
-            name: { type: String },
-            key: { type: String },
-            location: { type: String },
-        },
-        status: { type: String, default: 'pending' }
+      mode: { type: String },
+      amount: { type: Number },
+      amountWithGst: { type: Number },
+      transactionId: { type: String },
+      muid: { type: String },
+      receipt: AttachmentSchema,
+      status: { type: String },
     },
+  },
+  { timestamps: true },
+);
 
-}, { timestamps: true });
-
-const SustainableEnterprise = mongoose.model("SustainableEnterprise", SustainableEnterpriseSchema);
+const SustainableEnterprise = mongoose.model(
+  "SustainableEnterprise",
+  SustainableEnterpriseSchema,
+);
 
 module.exports = SustainableEnterprise;
