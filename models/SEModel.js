@@ -69,7 +69,10 @@ const SustainableEnterpriseSchema = new mongoose.Schema(
     },
 
     attachments: {
-      organizationProfile: AttachmentSchema,
+      organizationProfile: {
+        type: [AttachmentSchema],
+        default: [],
+      },
     },
 
     paymentDetails: {
