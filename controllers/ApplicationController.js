@@ -548,6 +548,12 @@ applicationCtrl.GetSingle = async (req, res) => {
       result = await SustainableEnterprise.findById(applicationId);
     } else if (type === "SS") {
       result = await SustainabilityStartup.findById(applicationId);
+    } else if (type === "SI") {
+      const SustainabilityInnovation = require("../models/SIModel");
+      result = await SustainabilityInnovation.findById(applicationId);
+    } else if (type === "GCC") {
+      const GCC = require("../models/GCCModel");
+      result = await GCC.findById(applicationId);
     }
 
     if (!result) return res.status(404).json({ msg: "Application not found" });
