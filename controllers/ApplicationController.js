@@ -26,6 +26,13 @@ function generateTransactionId() {
 applicationCtrl.CreateGCC = async (req, res) => {
   const createObj = req.body;
   try {
+    // ✅ SANITIZE BOOLEAN HERE
+    // if (createObj?.paymentDetails) {
+    //   if (createObj.paymentDetails.isKmaMember === "") {
+    //     delete createObj.paymentDetails.isKmaMember;
+    //   }
+    // }
+
     if (!createObj?.basicInformation?.organizationName?.trim())
       return res.status(400).json({ msg: "Bad Request" });
     if (createObj?.paymentDetails?.mode === "Online") {
@@ -355,7 +362,7 @@ applicationCtrl.checkStatus = async (req, res) => {
 
     if (!docWithExistingTxnId) {
       console.log("Transaction not found in DB");
-      return res.redirect("https://www.kma.qmarkdesk.com/failure");
+      return res.redirect("https://kma-anualevent-2025.vercel.app/failure");
     }
 
     const keyIndex = 1;
@@ -390,15 +397,15 @@ applicationCtrl.checkStatus = async (req, res) => {
 
       console.log("Payment status updated successfully");
 
-      return res.redirect("https://www.kma.qmarkdesk.com/success");
+      return res.redirect("https://kma-anualevent-2025.vercel.app/success");
     }
 
     console.log("Payment not successful");
 
-    return res.redirect("https://www.kma.qmarkdesk.com/failure");
+    return res.redirect("https://kma-anualevent-2025.vercel.app/failure");
   } catch (error) {
     console.error("PhonePe status check error:", error.message);
-    return res.redirect("https://www.kma.qmarkdesk.com/failure");
+    return res.redirect("https://kma-anualevent-2025.vercel.app/failure");
   }
 };
 

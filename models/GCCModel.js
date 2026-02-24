@@ -73,7 +73,14 @@ const GCCSchema = new mongoose.Schema(
       supportedDocuments: [SupportedDocumentSchema],
     },
     paymentDetails: {
-      isKmaMember: { type: Boolean },
+      isKmaMember: {
+        type: Boolean,
+        default: false,
+        set: (v) => {
+          if (v === "" || v === null || v === undefined) return false;
+          return v === true || v === "true";
+        },
+      },
       membershipId: { type: String },
       mode: { type: String },
       amount: { type: Number },
