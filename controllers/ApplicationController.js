@@ -231,9 +231,9 @@ const newPayment = async (req, res, obj) => {
     const sha256 = crypto.createHash("sha256").update(string).digest("hex");
     const checksum = sha256 + "###" + keyIndex;
 
-    // const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
-    const prod_URL =
-      "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
+    const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+    // const prod_URL =
+    //   "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
 
     const options = {
       method: "POST",
@@ -362,7 +362,7 @@ applicationCtrl.checkStatus = async (req, res) => {
 
     if (!docWithExistingTxnId) {
       console.log("Transaction not found in DB");
-      return res.redirect("https://kma-anualevent-2025.vercel.app/failure");
+      return res.redirect(process.env.PAYMENT_FAILURE_URL);
     }
 
     const keyIndex = 1;
@@ -377,7 +377,7 @@ applicationCtrl.checkStatus = async (req, res) => {
       keyIndex;
 
     const response = await axios.get(
-      `https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
+      `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -397,15 +397,15 @@ applicationCtrl.checkStatus = async (req, res) => {
 
       console.log("Payment status updated successfully");
 
-      return res.redirect("https://kma-anualevent-2025.vercel.app/success");
+      return res.redirect(process.env.PAYMENT_SUCCESS_URL);
     }
 
     console.log("Payment not successful");
 
-    return res.redirect("https://kma-anualevent-2025.vercel.app/failure");
+    return res.redirect(process.env.PAYMENT_FAILURE_URL);
   } catch (error) {
     console.error("PhonePe status check error:", error.message);
-    return res.redirect("https://kma-anualevent-2025.vercel.app/failure");
+    return res.redirect(process.env.PAYMENT_FAILURE_URL);
   }
 };
 
@@ -660,7 +660,7 @@ async function checkPendingPayments() {
 
     try {
       const response = await axios.get(
-        `https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
+        `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
         {
           headers: {
             "Content-Type": "application/json",
