@@ -231,7 +231,7 @@ const newPayment = async (req, res, obj) => {
     const sha256 = crypto.createHash("sha256").update(string).digest("hex");
     const checksum = sha256 + "###" + keyIndex;
 
-    const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+    const prod_URL = "https://api.phonepe.com/apis/pg/v1/pay";
     // const prod_URL =
     //   "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
 
@@ -377,7 +377,7 @@ applicationCtrl.checkStatus = async (req, res) => {
       keyIndex;
 
     const response = await axios.get(
-      `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
+      `https://api.phonepe.com/apis/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -660,7 +660,7 @@ async function checkPendingPayments() {
 
     try {
       const response = await axios.get(
-        `https://api.phonepe.com/apis/hermes/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
+        `https://api.phonepe.com/apis/pg/v1/status/${process.env.MERCHANT_ID}/${merchantTransactionId}`,
         {
           headers: {
             "Content-Type": "application/json",
