@@ -12,7 +12,7 @@ router.post("/create-ss", applicationCtrl.CreateSS);
 router.post("/create-si", applicationCtrl.CreateSI);
 router.post("/create-gcc", applicationCtrl.CreateGCC);
 
-router.post("/status/:txnId", applicationCtrl.checkStatus);
+router.get("/status/:txnId", applicationCtrl.checkStatus);
 
 router.use(authMiddleware);
 router.use(adminChecker);

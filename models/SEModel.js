@@ -82,7 +82,7 @@ const SustainableEnterpriseSchema = new mongoose.Schema(
       transactionId: { type: String },
       muid: { type: String },
       receipt: AttachmentSchema,
-      status: { type: String },
+      status: { type: String, default: "pending" },
     },
   },
   { timestamps: true },
