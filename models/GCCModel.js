@@ -88,7 +88,7 @@ const GCCSchema = new mongoose.Schema(
       receipt: ReceiptSchema,
       transactionId: { type: String },
       muid: { type: String },
-      status: { type: String },
+      status: { type: String, default: "pending" },
     },
   },
   { timestamps: true },

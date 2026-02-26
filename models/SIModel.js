@@ -26,7 +26,7 @@ const PaymentDetailsSchema = new mongoose.Schema(
     transactionId: { type: String },
     muid: { type: String },
     receipt: ReceiptSchema,
-    status: { type: String },
+    status: { type: String, default: "pending" },
   },
   { _id: false },
 );
